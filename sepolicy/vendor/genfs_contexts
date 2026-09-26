@@ -20,12 +20,8 @@ genfscon sysfs /devices/platform/fingerprint u:object_r:vendor_sysfs_fingerprint
 # GPU
 genfscon sysfs /kernel/gpu/gpu_min_clock u:object_r:vendor_sysfs_gpu:s0
 genfscon sysfs /kernel/gpu/gpu_max_clock u:object_r:vendor_sysfs_gpu:s0
-genfscon sysfs /devices/platform/13040000.mali/js_ctx_scheduling_mode u:object_r:vendor_sysfs_gpu:s0
-genfscon sysfs /devices/platform/13040000.mali/js_scheduling_period u:object_r:vendor_sysfs_gpu:s0
-genfscon sysfs /devices/platform/13040000.mali/dvfs_period u:object_r:vendor_sysfs_gpu:s0
 
 # Health
-genfscon sysfs /devices/platform/11016000.i2c/i2c-5/5-006b/power_supply/charger u:object_r:sysfs_batteryinfo:s0
 genfscon sysfs /devices/platform/soc/11e01000.i2c/i2c-1/1-0055/power_supply u:object_r:sysfs_batteryinfo:s0
 genfscon sysfs /devices/platform/soc/11e01000.i2c/i2c-1/1-006a/power_supply u:object_r:sysfs_batteryinfo:s0
 genfscon sysfs /devices/platform/11280000.i2c/i2c-10/10-0055/power_supply/ u:object_r:sysfs_batteryinfo:s0
@@ -122,8 +118,6 @@ genfscon sysfs /devices/platform/11e01000.i2c5/i2c-5/5-004e/tcpc/type_c_port0/wa
 genfscon sysfs /devices/platform/1000d000.pwrap/1000d000.pwrap:main_pmic/mt6397-rtc/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/1c804000.spmi/spmi-0/0-09/mt6685-rtc/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/1c015000.spmi/spmi-0/0-09/mt6685-rtc/wakeup u:object_r:sysfs_wakeup:s0
-genfscon sysfs /devices/platform/charger/power_supply/mtk-mst-div-chg/wakeup u:object_r:sysfs_wakeup:s0
-genfscon sysfs /devices/platform/charger/power_supply/mtk-slv-div-chg/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/battery_bq/power_supply/battery/wakeup26 u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/11016000.i2c/i2c-5/5-0034/wakeup/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/11016000.i2c/i2c-5/5-004e/wakeup/wakeup u:object_r:sysfs_wakeup:s0
@@ -142,7 +136,6 @@ genfscon sysfs /devices/platform/11cb0000.i2c3/i2c-3/3-0018/wakeup u:object_r:sy
 genfscon sysfs /devices/platform/11d00000.i2c5/i2c-5/5-0034/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/11d00000.i2c5/i2c-5/5-004e/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/soc/1a000000.camisp_legacy/wakeup u:object_r:sysfs_wakeup:s0
-genfscon sysfs /devices/platform/soc/15020000.imgsys_config/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/11cb0000.i2c3/i2c-3/3-0028/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/11f00000.i2c6/i2c-6/6-0067/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/11e01000.i2c5/i2c-5/5-0034/wakeup u:object_r:sysfs_wakeup:s0
@@ -170,7 +163,6 @@ genfscon sysfs /devices/platform/mtk_lpm/mtk_cpuidle_pm/wakeup u:object_r:sysfs_
 genfscon sysfs /devices/virtual/power_supply/mtk-gauge/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/soc/1e000000.adspsys/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/10800000.adsp_core0/wakeup u:object_r:sysfs_wakeup:s0
-genfscon sysfs /devices/platform/soc/18002000.consys/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/19030000.vpu_core0/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/19031000.vpu_core1/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/soc/1f000000.mdp/wakeup/ u:object_r:sysfs_wakeup:s0
@@ -178,7 +170,6 @@ genfscon sysfs /devices/platform/soc/11201000.usb0/wakeup u:object_r:sysfs_wakeu
 genfscon sysfs /devices/platform/soc/11211000.usb1/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/soc/1e980000.gce/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/soc/1e990000.gce/wakeup u:object_r:sysfs_wakeup:s0
-genfscon sysfs /devices/platform/soc/1f000000.mdp/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/15004000.ispsys/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/11201000.mtu3_0/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/10001000.consys/wakeup u:object_r:sysfs_wakeup:s0
@@ -188,7 +179,6 @@ genfscon sysfs /devices/platform/1e990000.gce/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/1f000000.mdp/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/pca_dv2_algo/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/mt_charger/wakeup u:object_r:sysfs_wakeup:s0
-genfscon sysfs /devices/platform/trusty/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/usb0/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/odm/odm:usb_switch/power_supply/usb_switch/wakeup    u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/1c7b1000.i2c/i2c-15/15-006b/mt6338-auxadc/wakeup     u:object_r:sysfs_wakeup:s0

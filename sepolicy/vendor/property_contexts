@@ -24,9 +24,6 @@ persist.vendor.fp.sensorUid                    u:object_r:vendor_fingerprint_pro
 vendor.fp.goodix.Y.offset                      u:object_r:vendor_fingerprint_prop:s0
 vendor.fp.goodix.X.offset                      u:object_r:vendor_fingerprint_prop:s0
 
-# Dynamic sensor
-vendor.dynamic_sensor.                          u:object_r:vendor_dynamic_sensor_prop:s0
-
 # RIL
 ro.vendor.oem.sno u:object_r:vendor_mtk_radio_prop:s0
 ro.vendor.oem.psno u:object_r:vendor_mtk_radio_prop:s0
@@ -38,6 +35,3 @@ vendor.sys.thermal. u:object_r:vendor_thermal_engine_prop:s0
 
 # TEE property
 vendor.tee.googlekey.status                          u:object_r:vendor_mtk_trustonic_tee_prop:s0
-
-# VT
-ro.vendor.vt.                               u:object_r:vendor_mtk_vendor_vt_prop:s0
