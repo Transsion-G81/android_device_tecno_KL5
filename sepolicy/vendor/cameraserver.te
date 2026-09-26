@@ -1,0 +1,3 @@
+get_prop(cameraserver, vendor_camera_prop)
+binder_call(cameraserver, hal_sensors_default)
+allow cameraserver { sysfs_sub_torch_file sysfs_torch_file sysfs_wide_torch_file }:file rw_file_perms;

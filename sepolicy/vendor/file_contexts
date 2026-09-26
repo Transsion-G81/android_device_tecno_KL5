@@ -1,0 +1,39 @@
+# Camera
+/mnt/vendor/persist/camera(/.*)? u:object_r:camera_persist_file:s0
+/data/vendor/anc_yuvnight/working_dir(/.*)?                                             u:object_r:vendor_megvii_data_file:s0
+/data/vendor/arcsoft(/.*)?                                                              u:object_r:vendor_arcsoft_data_file:s0
+/data/vendor/camera(/.*)?                                                               u:object_r:transsion_camera_data_file:s0
+/data/vendor/camera_watermark(/.*)?                                                     u:object_r:vendor_watermark_data_file:s0
+/data/vendor/multicam(/.*)?                                                             u:object_r:transsion_camera_data_file:s0
+/sys/devices/platform/(odm/odm:tran_battery|tran_battery)/tran_cam                              u:object_r:sysfs_tran_cam_file:s0
+/(system\/vendor|vendor)/bin/hw/vendor\.transsion\.hardware\.trancam\.trancamserver@1\.0-service     u:object_r:trancamserver_exec:s0
+
+# Fingerprint - devices
+/dev/fpsensor                                                              u:object_r:fingerprint_device:s0
+/dev/focaltech_fp                                                       u:object_r:fingerprint_device:s0
+
+# Fingerprint - data
+/data/vendor/focaltech(/.*)?                                            u:object_r:fingerprint_vendor_data_file:s0
+/data/vendor/goodix(/.*)?                                               u:object_r:fingerprint_vendor_data_file:s0
+
+# Fingerprint
+/(system\/vendor|vendor)/bin/hw/android\.hardware\.biometrics\.fingerprint@2\.1-service   u:object_r:hal_fingerprint_default_exec:s0
+/(vendor|system/vendor)/bin/hw/vendor\.focaltech\.hardware\.biometrics\.fingerprint@1\.0-service    u:object_r:hal_fingerprint_default_exec:s0
+
+# Health
+/(vendor|system\/vendor)/bin/hw/android\.hardware\.health@2\.1-service         u:object_r:hal_health_default_exec:s0
+
+# Sensors
+/(vendor|system\/vendor)/bin/hw/android\.hardware\.sensors@[0-9]\.[0-9]-service(\.multihal)?  u:object_r:hal_sensors_default_exec:s0
+
+# Trustonic
+/(vendor|system/vendor)/bin/kmsetkey_ca.trustonic                                                  u:object_r:trustonic_kmsetkey_ca_exec:s0
+
+# Vibrator
+/vendor/bin/hw/vendor\.qti\.hardware\.vibrator\.service u:object_r:hal_vibrator_default_exec:s0
+
+# USB OTG
+/sys/devices/platform/odm/odm:tran_battery/OTG_CTL                                     u:object_r:sysfs_OTG_CTL_file:s0
+
+# Extcon
+/sys/devices/platform/extcon_usb/extcon/extcon0/cable.1/state                           u:object_r:sysfs_OTG_STATE_file:s0

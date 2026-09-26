@@ -1,0 +1,1 @@
+# Android Device tree for the Tecno Spark 30C

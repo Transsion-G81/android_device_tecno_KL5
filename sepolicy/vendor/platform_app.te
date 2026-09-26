@@ -1,0 +1,2 @@
+#============= platform_app ==============
+allow platform_app { sysfs_sub_torch_file sysfs_torch_file sysfs_wide_torch_file }:file rw_file_perms;

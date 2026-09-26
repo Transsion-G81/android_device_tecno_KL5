@@ -1,0 +1,5 @@
+
+####################################
+# from variable PRODUCT_ODM_PROPERTIES
+####################################
+import /odm/etc/import.prop

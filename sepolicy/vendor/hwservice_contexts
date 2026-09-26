@@ -1,0 +1,11 @@
+# Fingerprint
+vendor.goodix.hardware.biometrics.fingerprint::IGoodixFingerprintDaemon          u:object_r:goodix_fingerprint_service:s0
+vendor.goodix.hardware.biometrics.fingerprint::IGoodixFingerprintDaemonExt       u:object_r:goodix_fingerprint_service:s0
+vendor.goodix.hardware.biometrics.fingerprint::IGoodixFingerprintDaemonHbd          u:object_r:goodix_fingerprint_service:s0
+vendor.goodix.hardware.biometrics.fingerprint::IGoodixFingerprintDaemonFido       u:object_r:goodix_fingerprint_service:s0
+vendor.focaltech.hardware.biometrics.fingerprint::IFocalFingerprint    u:object_r:ff_hwservice:s0
+vendor.mediatek.hardware.biometrics.fingerprint::ITranBiometricsFingerprint u:object_r:hal_fingerprint_hwservice:s0
+vendor.fpsensor.hardware.fpsensorhidlsvc::IFpsensorHidlSvc                 u:object_r:fp_ext_svc2_hwservice:s0
+
+# Camera
+vendor.transsion.hardware.trancam.trancamserver::ITrancamserver                     u:object_r:hal_trancamserver_hwservice:s0
