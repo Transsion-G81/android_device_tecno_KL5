@@ -341,10 +341,11 @@ PRODUCT_PACKAGES += \
    vndservice
 
 # Wi-Fi
+$(call soong_config_set_bool,mediatek_wifi_hal,use_pre_u_qpr2_struct,true)
 PRODUCT_PACKAGES += \
     android.system.wifi.keystore@1.0.vendor \
-    libkeystore-wifi-hidl \
-    libkeystore-engine-wifi-hidl \
+    libkeystore-wifi-hidl:64 \
+    libkeystore-engine-wifi-hidl:64 \
     libnl.vendor \
     android.hardware.wifi@1.1.vendor \
     android.hardware.wifi@1.2.vendor \
@@ -355,8 +356,9 @@ PRODUCT_PACKAGES += \
     android.hardware.wifi.supplicant@1.2.vendor \
     android.hardware.wifi.supplicant@1.3.vendor \
     android.hardware.wifi.supplicant@1.4.vendor \
+    wpa_supplicant \
     hostapd \
-    libwifi-hal-wrapper \
+    libwifi-hal-wrapper:64 \
     android.hardware.wifi-service
 
 PRODUCT_COPY_FILES += \
