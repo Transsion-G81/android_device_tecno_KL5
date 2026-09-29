@@ -1,0 +1,25 @@
+# XGSI da1adf94cf77
+service xgsi_dmesg /system/bin/sh /system/etc/init/xgsi-dmesg.sh
+    class core
+    user root
+    group root log readproc
+    oneshot
+    disabled
+
+service xgsi_bootlog /system/bin/sh /system/etc/init/xgsi-bootlog.sh
+    class core
+    user root
+    group root log readproc
+    oneshot
+    disabled
+
+on post-fs
+    start xgsi_dmesg
+
+on late-fs
+    start xgsi_dmesg
+    start xgsi_bootlog
+
+on post-fs-data
+    start xgsi_dmesg
+    start xgsi_bootlog
