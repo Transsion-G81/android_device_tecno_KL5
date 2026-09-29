@@ -364,7 +364,7 @@ PRODUCT_PACKAGES += \
 # Debugging
 ifeq ($(WITH_XGSI_LOGS),true)
     PRODUCT_COPY_FILES += \
-        $(LOCAL_PATH)/logging/init.xgsi.rc:$(TARGET_COPY_OUT_SYSTEM)/etc/init/init.xgsi.rc \
+        $(LOCAL_PATH)/logging/init.xgsi-bootlog.rc:$(TARGET_COPY_OUT_SYSTEM)/etc/init/init.xgsi-bootlog.rc \
         $(LOCAL_PATH)/logging/xgsi-bootlog.sh:$(TARGET_COPY_OUT_SYSTEM)/etc/init/xgsi-bootlog.sh \
         $(LOCAL_PATH)/logging/xgsi-dmesg.sh:$(TARGET_COPY_OUT_SYSTEM)/etc/init/xgsi-dmesg.sh
 endif
