@@ -57,6 +57,9 @@ genfscon sysfs /devices/platform/11016000.i2c/i2c-5/5-0034/mt6370_chg.3.auto/pow
 genfscon sysfs /devices/platform/1c804000.spmi/spmi-0/0-04/mt6377-gauge/power_supply/ u:object_r:sysfs_batteryinfo:s0
 genfscon sysfs /sys/devices/platform/1000d000.pwrap/1000d000.pwrap:mt6358-pmic/mt6358-gauge/power_supply/battery/capacity u:object_r:sysfs_batteryinfo:s0
 genfscon sysfs /sys/devices/platform/1000d000.pwrap/1000d000.pwrap:mt6358-pmic/mt6358-gauge/power_supply/battery/present u:object_r:sysfs_batteryinfo:s0
+genfscon sysfs /devices/platform/11016000.i2c/i2c-5/5-006b/power_supply   u:object_r:sysfs_batteryinfo:s0
+genfscon sysfs /devices/platform/mtk_ctd/power_supply                     u:object_r:sysfs_batteryinfo:s0
+genfscon sysfs /devices/platform/odm/odm:tran_auto_test/power_supply      u:object_r:sysfs_batteryinfo:s0
 
 # Touchpanel
 genfscon sysfs /touchpanel                            						   u:object_r:sysfs_touchpanel:s0
