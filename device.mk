@@ -375,5 +375,13 @@ PRODUCT_COPY_FILES += \
 # Inherit the proprietary files
 $(call inherit-product, vendor/tecno/KL5/KL5-vendor.mk)
 
+# KL5n: layer the imx582 back-camera blobs on top of the shared vendor tree.
+# lineage_KL5n.mk sets SOONG_CONFIG_tecno_camera_camera_variant := kl5n
+# before inheriting this file; lineage_KL5.mk never sets it to kl5n, so the
+# KL5 build is unchanged.
+ifneq ($(filter kl5n,$(SOONG_CONFIG_tecno_camera_camera_variant)),)
+$(call inherit-product, vendor/tecno/KL5/KL5n-camera.mk)
+endif
+
 # Inherit the sign keys
 $(call inherit-product, vendor/lineage-priv/keys/keys.mk)

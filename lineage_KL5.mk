@@ -4,6 +4,12 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
+# Camera variant for the soong_config srcs switch in vendor/tecno/KL5/Android.bp
+# (libcameracustom). Must be set before device.mk so the build system sees it.
+SOONG_CONFIG_NAMESPACES += tecno_camera
+SOONG_CONFIG_tecno_camera += camera_variant
+SOONG_CONFIG_tecno_camera_camera_variant := kl5
+
 # Inherit from those products. Most specific first.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
