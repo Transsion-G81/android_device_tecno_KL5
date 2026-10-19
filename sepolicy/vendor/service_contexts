@@ -1,5 +1,4 @@
 # NFC (KL5n - NXP PN553)
-# AIDL extension service registered by android.hardware.nfc-service.nxp
-# (hardware/nxp/nfc).  Same type gale uses for its NFC ext service;
-# android.hardware.nfc.INfc/default itself comes from AOSP sepolicy.
-vendor.nxp.nxpnfc_aidl.INxpNfc/default                           u:object_r:hal_nfc_service:s0
+# The vendor.nxp.nxpnfc_aidl.INxpNfc/default service label is provided by
+# device/mediatek/sepolicy_vndr (base/vendor/service_contexts); do not
+# duplicate it here (checkpolicy rejects redeclared services).
