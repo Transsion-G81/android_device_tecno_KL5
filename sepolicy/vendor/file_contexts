@@ -37,3 +37,10 @@
 
 # Extcon
 /sys/devices/platform/extcon_usb/extcon/extcon0/cable.1/state                           u:object_r:sysfs_OTG_STATE_file:s0
+
+# NFC (KL5n - NXP PN553; KL5 has no NFC, these labels are inert there)
+# Device node created by nfc_i2c.ko (modules.load.vendor for both variants).
+/dev/pn553                                                           u:object_r:nfc_device:s0
+# Source-built Lineage AIDL HAL (hardware/nxp/nfc); the HAL's own vintf
+# fragment declares android.hardware.nfc + vendor.nxp.nxpnfc_aidl.
+/(vendor|system/vendor)/bin/hw/android\.hardware\.nfc-service\.nxp   u:object_r:hal_nfc_default_exec:s0

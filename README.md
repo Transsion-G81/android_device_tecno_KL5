@@ -243,7 +243,7 @@ break the KL5 build.
 ```
 Project_Infinity-X-3.12-KL5-05.10.2026-GAPPS-UNOFFICIAL/
 ├── android_device_tecno_KL5-lineage-23.2/   ← this tree (README lives here)
-├── android_vendor_tecno_KL5-lineage-23.2/   ← vendor blobs (+ proprietary_kl5n/, KL5n-camera.mk)
+├── android_vendor_tecno_KL5-lineage-23.2/   ← vendor blobs (+ proprietary_kl5n/, KL5n-camera.mk, KL5n-nfc.mk)
 ├── android_tools_extract-utils-lineage-23.0/← extract tooling
 ├── vendor/                                  ← unpacked ROM vendor.img (PATCHED, §2)
 ├── TECNO-KL5n-KL5n-XK678ORUWXAdAeAfP-U-OP-260710V808/ ← stock KL5n dump
@@ -251,3 +251,78 @@ Project_Infinity-X-3.12-KL5-05.10.2026-GAPPS-UNOFFICIAL/
 ├── payload.bin / vendor.img / *.img         ← original ROM payload
 └── config/, META-INF/                       ← ROM repack scaffolding
 ```
+
+## 6. NFC (KL5n only — NXP PN553)
+
+The KL5 has no NFC; the KL5n has an NXP PN553 (`/dev/pn553`, node created by
+`nfc_i2c.ko`, already in `modules.load.vendor`/`modules.load.recovery` for
+both variants). The stock ROM ships a HIDL stack
+(`android.hardware.nfc_snxxx@1.2-service` + prebuilt `nfc_nci_nxp_snxxx.so`);
+we do **not** reuse the stock HAL — Lineage builds the whole HAL from source.
+
+### Architecture (mirrors xiaomi gale's NXP snxxx setup)
+
+* **HAL from source** — `android.hardware.nfc-service.nxp` (module built in
+  `hardware/nxp/nfc`, snxxx variant). It builds `nfc_nci_nxp_snxxx.so` from
+  source too, so that blob and the stock HIDL service rc are deliberately
+  *not* shipped (both would clash on service name `vendor.nfc_hal_service`).
+  The module ships its own init rc (class `early_hal`, user/group `nfc`) and
+  a vintf fragment that declares `android.hardware.nfc` AIDL V1 + the
+  `vendor.nxp.nxpnfc_aidl` `INxpNfc/default` extension into the device
+  manifest — no manual manifest edits needed.
+* **No `lineage.dependencies` change** — Lineage's global manifest already
+  pulls `hardware/nxp/nfc` and `hardware/nxp/secure_element` (the latter
+  provides `vendor.nxp.nxpese@1.0`, linked by the source HAL).
+* **Blobs / configs from stock KL5n** (`vendor/tecno/KL5/proprietary_kl5n/`,
+  gated by `KL5n-nfc.mk` behind the same kl5n switch as the camera):
+  * `lib64/libpn557_fw.so` — firmware (`NXP_FW_NAME` in libnfc-nxp.conf)
+  * `etc/libnfc-nci.conf`, `etc/libnfc-nxp.conf` (`NXP_NFC_DEV_NODE=/dev/pn553`),
+    `etc/libnfc-slm.conf`
+  * `libnfc-nxp_RF.conf` — sits at **vendor root**; halimpl hardcodes
+    `/system/vendor/libnfc-nxp_RF.conf`
+  * `etc/init/init.nxp.nfc.rc` — post-fs-data dirs + chmod/chown of
+    `/dev/pn553`
+  * `etc/permissions/com.nxp.{nfc,mifare,ls}.xml`
+* **Feature xmls** — `android.hardware.nfc.xml`, `android.hardware.nfc.hce.xml`,
+  `com.android.nfc_extras.xml` copied from `frameworks/native/data/etc/` to
+  `vendor/etc/permissions` (same set stock installs). The system app
+  `NfcNci` ships by default via `base_system.mk`; `Tag` +
+  `com.android.nfc_extras` are added explicitly (gale pattern). No
+  `SecureElement` package — stock has no SE HAL service.
+* **Shared, un-gated edits (inert on KL5)** — sepolicy and FCM entries are
+  harmless to a device that never registers the service:
+  * `sepolicy/vendor/file_contexts`: `/dev/pn553 → nfc_device`,
+    `android.hardware.nfc-service.nxp → hal_nfc_default_exec`
+    (AOSP `system_sepolicy` only labels the HIDL `@1.x-service` binary)
+  * `sepolicy/vendor/service_contexts` (new):
+    `vendor.nxp.nxpnfc_aidl.INxpNfc/default → hal_nfc_service`
+  * `sepolicy/vendor/hal_nfc_default.te` (new):
+    `allow hal_nfc_default hal_nfc_service:service_manager add;`
+  * `framework_compatibility_matrix.xml`: `vendor.nxp.nxpnfc_aidl` AIDL
+    entry with `optional="true"` so the KL5 (no NFC manifest entry) still
+    passes checkvintf
+  * `rootdir/etc/ueventd.mt6768.rc`: `/dev/pn553 0660 nfc radio`
+* **Not shipped, by design** — stock's HIDL stubs
+  (`android.hardware.nfc@1.x.so`, `vendor.nxp.nxpnfc@2.0.so`,
+  `vendor.nxp.nxpese@1.0.so`), `nfc_nci_nxp_snxxx.so` (built from source),
+  system_ext `NfcNci`/`com.nxp.nfc.jar`/`com.transsion.nfc.jar` (Lineage
+  framework provides its own NFC app + extras jar), and HIDL
+  `hwservice_contexts` entries (`nxpnfc_hwservice` etc.) — no HIDL nfc/ese
+  server runs, so the AIDL `service_contexts` entry is the only one needed.
+
+### NFC file map
+
+| File | Role |
+|---|---|
+| `vendor/.../proprietary_kl5n/vendor/**` | 9 stock files (configs, RF conf, firmware, init rc, nxp feature xmls) |
+| `vendor/.../KL5n-nfc.mk` | packages + PRODUCT_COPY_FILES, kl5n-gated |
+| `device.mk` (kl5n block) | inherits `KL5n-nfc.mk` next to `KL5n-camera.mk` |
+| `sepolicy/vendor/file_contexts` | dev node + HAL binary labels |
+| `sepolicy/vendor/service_contexts` | `INxpNfc` → `hal_nfc_service` |
+| `sepolicy/vendor/hal_nfc_default.te` | allow add of that service |
+| `framework_compatibility_matrix.xml` | optional `vendor.nxp.nxpnfc_aidl` (avoids breaking KL5 checkvintf) |
+| `rootdir/etc/ueventd.mt6768.rc` | `/dev/pn553` permissions (belt + braces with init.nxp.nfc.rc) |
+
+Recovery/rollback for NFC: delete `KL5n-nfc.mk` + the nfc inherit line +
+`proprietary_kl5n/**/nfc*` + the three sepolicy files/sections + the FCM
+entry + the ueventd line; KL5 builds never included any of it at build time.

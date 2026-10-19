@@ -242,5 +242,16 @@
             <instance>default</instance>
         </interface>
     </hal>
-    
+    <!-- KL5n only: NXP PN553 AIDL extension HAL shipped by
+         android.hardware.nfc-service.nxp's vintf fragment.  optional so
+         the KL5 build (no NFC) still passes checkvintf. -->
+    <hal format="aidl" optional="true">
+        <name>vendor.nxp.nxpnfc_aidl</name>
+        <version>1</version>
+        <interface>
+            <name>INxpNfc</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+
 </compatibility-matrix>
