@@ -178,6 +178,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     CarrierConfigOverlay_KL5 \
     FrameworksResOverlay_KL5 \
+    NfcResOverlay_KL5 \
     SystemUIOverlay_KL5 \
     SettingsResOverlay_KL5 \
     TetheringResOverlay_KL5 \
