@@ -32,43 +32,18 @@ apply_kl5n_nfc_ktp_patch() {
     fi
 
     TARGET="$BUILD_TOP/packages/modules/Nfc/libnfc-nci/src/nfa/dm/nfa_dm_discover.cc"
+    PATCH="$BUILD_TOP/device/tecno/KL5/patches/nfc-ktp.patch"
 
     [ -f "$TARGET" ] || return 0
+    [ -f "$PATCH" ] || return 0
 
     # Idempotency: bail out if our marker comment is already present.
     grep -q "Card re-activated while still in POLL_ACTIVE" "$TARGET" 2>/dev/null && return 0
 
     echo "vendorsetup.sh: applying KL5n NFC KTP patch to $TARGET"
 
-    TMPFILE="$(mktemp)" || return 0
-    cat > "$TMPFILE" <<'EOF'
-    case NFA_DM_RF_INTF_ACTIVATED_NTF:
-      /* Card re-activated while still in POLL_ACTIVE (deactivation NTF was
-       * lost, e.g. NXP PN557 firmware with card still in field). Stop the
-       * deact-NTF timeout, clear pending flags, and treat as fresh activation.
-       */
-      nfa_sys_stop_timer(&nfa_dm_cb.disc_cb.tle);
-      nfa_dm_cb.disc_cb.disc_flags &= ~(NFA_DM_DISC_FLAGS_W4_RSP | NFA_DM_DISC_FLAGS_W4_NTF);
-      if (nfa_dm_disc_notify_activation(&(p_data->nfc_discover)) == NFA_STATUS_FAILED) {
-        LOG(VERBOSE) << StringPrintf(
-            "%s: Not matched, restart discovery after receiving deactivate ntf", __func__);
-        nfa_dm_cb.disc_cb.disc_flags |= (NFA_DM_DISC_FLAGS_W4_RSP | NFA_DM_DISC_FLAGS_W4_NTF);
-        NFC_Deactivate(NFA_DEACTIVATE_TYPE_IDLE);
-      }
-      break;
-EOF
-
-    awk -v blockfile="$TMPFILE" '
-    /^    case NFA_DM_CORE_INTF_ERROR_NTF:$/ { in_block=1 }
-    in_block && /^    case NFA_DM_RF_INTF_EXT_START_CMD:$/ {
-        while ((getline line < blockfile) > 0) print line
-        close(blockfile)
-        in_block=0
-    }
-    { print }
-    ' "$TARGET" > "$TARGET.tmp" && mv "$TARGET.tmp" "$TARGET"
+    git -C "$BUILD_TOP" apply --verbose "$PATCH"
     rc=$?
-    rm -f "$TMPFILE"
 
     if [ $rc -eq 0 ]; then
         echo "vendorsetup.sh: KL5n NFC KTP patch applied"
@@ -76,6 +51,7 @@ EOF
         echo "vendorsetup.sh: KL5n NFC KTP patch FAILED" >&2
     fi
     return $rc
+}
 
 apply_kl5n_settings_nfc_patch() {
     if [ -n "$KL5_NFC_PATCH_SKIP" ]; then
