@@ -76,7 +76,6 @@ EOF
         echo "vendorsetup.sh: KL5n NFC KTP patch FAILED" >&2
     fi
     return $rc
-}
 
 apply_kl5n_settings_nfc_patch() {
     if [ -n "$KL5_NFC_PATCH_SKIP" ]; then
