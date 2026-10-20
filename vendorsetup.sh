@@ -85,7 +85,7 @@ apply_kl5n_settings_nfc_patch() {
         print indent "try {"
         print indent "    mContext.unregisterReceiver(mReceiver);"
         print indent "} catch (IllegalArgumentException e) {"
-        print indent "    Log.w(TAG, \"Receiver was not registered; ignore.\", e);"
+        print indent "    System.err.println(\"Receiver was not registered; ignore.\");"
         print indent "}"
         next
     }
