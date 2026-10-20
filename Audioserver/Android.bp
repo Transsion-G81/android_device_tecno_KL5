@@ -1,0 +1,39 @@
+//
+// Copyright (C) 2024-2025 The LineageOS Project
+//
+// SPDX-License-Identifier: Apache-2.0
+//
+
+android_app_import {
+	name: "Audioservice.tran",
+	owner: "infinix",
+	apk: "audio_service.apk",
+	certificate: "platform",
+	dex_preopt: {
+		enabled: false,
+	},
+	privileged: true,
+	system_ext_specific: true,
+
+    required: [
+        "privapp-permissions-audioserver",
+        "config-audioserver",
+    ],
+}
+
+
+prebuilt_etc {
+    name: "privapp-permissions-audioserver",
+    relative_install_path: "permissions",
+    src: "privapp_whitelist_audioserver.xml",
+    system_ext_specific: true,
+    filename_from_src: true,
+}
+
+prebuilt_etc {
+    name: "config-audioserver",
+    relative_install_path: "sysconfig",
+    src: "audioserver-whitelist.xml",
+    system_ext_specific: true,
+    filename_from_src: true,
+}

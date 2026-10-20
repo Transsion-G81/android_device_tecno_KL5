@@ -1,0 +1,61 @@
+# Allow fingerprint HAL to access fingerprint device
+typeattribute hal_fingerprint_default data_between_core_and_vendor_violators;
+add_hwservice(hal_fingerprint_default, fp_ext_svc2_hwservice)
+
+allow hal_fingerprint_default vendor_sysfs_fingerprint:{file chr_file} rw_file_perms;
+allow hal_fingerprint_default vendor_sysfs_fingerprint:dir r_dir_perms;
+
+# Allow fingerprint HAL to setup fingerprint database files
+allow hal_fingerprint_default vendor_fingerprint_data_file:dir rw_dir_perms;
+allow hal_fingerprint_default vendor_fingerprint_data_file:file create_file_perms;
+
+allow hal_fingerprint_default {
+  fingerprint_device
+  input_device
+  tee_device
+  uhid_device
+  vndbinder_device
+}: chr_file rw_file_perms;
+
+# Allow FP to access vndservicemanager via IPC
+binder_call(hal_fingerprint_default, vndservicemanager)
+allow hal_fingerprint_default fingerprint_vndservice:service_manager { add find };
+
+# Allow fingerprint HAL to read battery info
+allow hal_fingerprint_default sysfs_batteryinfo:dir { search };
+allow hal_fingerprint_default sysfs_batteryinfo:file r_file_perms;
+allow hal_fingerprint_default sysfs_pmu:dir { search };
+allow hal_fingerprint_default sysfs_pmu:file r_file_perms;
+
+# Create fingerprint HAL entrypoint
+allow hal_fingerprint_default hal_fingerprint_default_exec:file entrypoint;
+
+# Allow fingerprint HAL to get and set its props
+
+# Allow fingerprint HAL to create netlink_socket
+allow hal_fingerprint_default self:netlink_socket create_socket_perms_no_ioctl;
+
+allow hal_fingerprint_default init:unix_stream_socket connectto;
+allow hal_fingerprint_default input_device:dir { read open search };
+allow hal_fingerprint_default mnt_vendor_file:dir search;
+allow hal_fingerprint_default persist_data_file:dir search;
+allow hal_fingerprint_default property_socket:sock_file write;
+allow hal_fingerprint_default self:netlink_kobject_uevent_socket { read create bind setopt };
+allow hal_fingerprint_default goodix_fingerprint_service:hwservice_manager { add find };
+
+set_prop(hal_fingerprint_default, vendor_fingerprint_prop)
+set_prop(hal_fingerprint_default, vendor_mtk_default_prop)
+
+# Types
+type ff_ta_exec, exec_type, file_type;
+type ff_service, service_manager_type;
+type ff_hwservice, hwservice_manager_type;
+type ff_device, dev_type;
+type ff_data_file, file_type, data_file_type;
+
+# hal_fingerprint_default access
+allow hal_fingerprint_default ff_device:chr_file { ioctl read write getattr lock append map open watch watch_reads };
+allow hal_fingerprint_default ff_data_file:dir { ioctl read write create getattr setattr lock rename open watch watch_reads add_name remove_name reparent search rmdir };
+allow hal_fingerprint_default ff_data_file:file { ioctl read write create getattr setattr lock append map unlink rename open watch watch_reads };
+allow hal_fingerprint_default ff_service:service_manager { add find };
+allow hal_fingerprint_default ff_hwservice:hwservice_manager { add find };

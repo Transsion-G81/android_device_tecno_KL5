@@ -1,0 +1,60 @@
+# Allow access to the HALs
+hal_client_domain(hal_sensors_default, hal_graphics_allocator);
+
+# Allow hal_sensors_default to find fwk_camera_service
+allow hal_sensors_default fwk_camera_service:service_manager find;
+
+# Allow hal_sensors_default to find hal_graphics_mapper_hwservice
+allow hal_sensors_default hal_graphics_mapper_hwservice:hwservice_manager find;
+
+# Allow hal_sensors_default to find hidl_token_hwservice
+allow hal_sensors_default hidl_token_hwservice:hwservice_manager find;
+
+# Allow sensors HAL to access ged
+allow hal_sensors_default proc_ged:file r_file_perms;
+
+# Allow binder communication with cameraserver
+binder_call(hal_sensors_default, cameraserver)
+
+allow hal_sensors_default nvcfg_file:dir create_dir_perms;
+allow hal_sensors_default nvcfg_file:file create_file_perms;
+
+allow hal_sensors_default {
+    dri_device
+    gpu_device
+    ion_device
+    m_acc_misc_device
+    m_act_misc_device
+    m_als_misc_device
+    m_baro_misc_device
+    m_bio_misc_device
+    m_fusion_misc_device
+    m_gyro_misc_device
+    m_hmdy_misc_device
+    m_mag_misc_device
+    m_pedo_misc_device
+    m_ps_misc_device
+    m_situ_misc_device
+    m_step_c_misc_device
+    sensorlist_device
+    hwmsensor_device
+}:chr_file rw_file_perms;
+
+allow hal_sensors_default {
+    nvdata_file
+}:dir { read search open };
+allow hal_sensors_default {
+    nvdata_file
+}:file { read getattr open };
+
+allow hal_sensors_default sensor_data_file:dir search;
+
+binder_call(hal_sensors_default, system_server)
+
+rw_dir_file(hal_sensors_default, nvdata_file)
+rw_dir_file(hal_sensors_default, sensor_data_file)
+
+get_prop(hal_sensors_default, camera_config_prop)
+get_prop(hal_sensors_default, vendor_camera_prop)
+
+

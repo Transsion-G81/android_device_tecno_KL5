@@ -1,0 +1,14 @@
+set_prop(kpoc_charger, debug_prop)
+
+# Allow writing to the property socket
+allow kpoc_charger property_socket:sock_file write;
+
+# Allow connection to init over property service socket
+allow kpoc_charger init:unix_stream_socket connectto;
+
+# Sysfs wakelock nodes
+allow kpoc_charger sysfs_wake_lock:dir search;
+allow kpoc_charger sysfs_wake_lock:file { open read write getattr };
+
+# Sysfs LED brightness
+allow kpoc_charger sysfs_leds:dir search;

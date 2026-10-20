@@ -1,0 +1,9 @@
+allow hal_audio_default persist_data_file:dir search;
+allow hal_audio_default mtk_audiohal_data_file:dir create_dir_perms;
+allow hal_audio_default mtk_audiohal_data_file:file create_file_perms;
+allow hal_audio_default sysfs_boot_info:file r_file_perms;
+allow hal_audio_default sysfs:file { read getattr open };
+
+r_dir_file(hal_audio_default, sysfs_batteryinfo)
+set_prop(hal_audio_default, vendor_mtk_audiohal_prop)
+hal_client_domain(hal_audio_default, hal_power)
