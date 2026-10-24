@@ -1,0 +1,74 @@
+From 7b1c0a4e2f9d1a5c3e8b0d47c9a2f5e6801c3b71 Mon Sep 17 00:00:00 2001
+From: KL5n NFC bringup <nfc@localhost>
+Date: Sat, 24 Oct 2026 03:00:00 +0700
+Subject: [PATCH 1/2] nfc: stop RF discovery before the CE-discovery in
+ phNxpNciHal_close()
+
+The close path hands the NFCC over to card emulation by sending a listen-only
+RF_DISCOVER (cmd_ce_discovery_nci).  The parameters are built from
+NXP_UICC_LISTEN_TECH_MASK and NXP_ESE_LISTEN_TECH_MASK, and BOTH DEFAULT TO
+0x07 when the keys are absent from libnfc-nxp.conf - so the A (0x80),
+B (0x81) and F (0x82) listen parameters are always added and the command is
+always sent (observed as 21 03 07 03 80 01 81 01 82 01).
+
+Android 16's libnfc-nci closes the HAL without deactivating discovery first,
+so that RF_DISCOVER arrives while discovery is still running.  This NFCC
+(PN557) answers CORE_GENERIC_ERROR_NTF with DISCOVERY_ALREADY_STARTED instead
+of RF_DISCOVER_RSP.  The HAL's pending-command timer then expires, it logs
+
+    E NxpHal: Callback Status is failed!! Timer Expired!! Couldn't read it! 0xff
+    E NxpHal: CMD_CE_DISC_NCI: Failed
+
+and CORE_RESETs the NFCC while the stack still believes NFC is enabled
+(phNxpNciHal_deinitialize / NfcAdapterService still active).  The stack's next
+commands time out (nfc_ncif_cmd_timeout -> NFA_DM_NFCC_TIMEOUT_EVT ->
+NfcService restartStack), which the user sees as "the tag is detected, then
+NFC turns off and does nothing".
+
+Stop discovery first - a fresh, listen-only discovery is exactly what the CE
+handover needs, and RF_DEACTIVATE type DISCOVERY (0x03) is the same command
+libnfc-nci itself uses when it restarts discovery.
+
+Test: NCF_KL5n, NFC on/off cycles and tag reads.  Expected: no
+"CMD_CE_DISC_NCI: Failed", no "restartStack", no nfc_ncif_cmd_timeout.
+
+--- a/snxxx/halimpl/hal/phNxpNciHal.cc
++++ b/snxxx/halimpl/hal/phNxpNciHal.cc
+@@ -2384,6 +2384,7 @@
+   uint8_t cmd_ce_in_phone_off_pn557[] = {0x20, 0x02, 0x05, 0x01,
+                                          0xA0, 0x07, 0x01, 0x02};
+   uint8_t cmd_system_set_service_status[] = {0x2F, 0x01, 0x01, 0x00};
++  uint8_t cmd_rf_deactivate_nci[] = {0x21, 0x06, 0x01, 0x03};
+   uint8_t length = 0;
+   uint8_t numPrms = 0;
+   uint8_t ptr = 4;
+@@ -2494,13 +2495,26 @@
+       cmd_ce_discovery_nci[ptr++] = 0x82;
+       cmd_ce_discovery_nci[ptr++] = 0x01;
+       length += 2;
+     }
+ 
+     if (length != 0) {
++      /* Stop the discovery that is still running at this point.  Android 16's
++       * libnfc-nci closes the HAL without an RF_DEACTIVATE, so without this
++       * the RF_DISCOVER below is answered with
++       * CORE_GENERIC_ERROR_NTF(DISCOVERY_ALREADY_STARTED) instead of
++       * RF_DISCOVER_RSP; the HAL then reports CMD_CE_DISC_NCI: Failed and
++       * resets the NFCC underneath the running stack, which makes NfcService
++       * restart the whole NFC stack in a loop.
++       * phNxpNciHal_send_ext_cmd_ntf() is used because RF_DEACTIVATE produces
++       * both a response and a notification. */
++      status = phNxpNciHal_send_ext_cmd_ntf(sizeof(cmd_rf_deactivate_nci),
++                                            cmd_rf_deactivate_nci);
++      if (status != NFCSTATUS_SUCCESS) {
++        NXPLOG_NCIHAL_E("CMD_RF_DEACTIVATE before CE discovery: Failed");
++      }
+       cmd_ce_discovery_nci[2] = length + 1;
+       cmd_ce_discovery_nci[3] = numPrms;
+       status = phNxpNciHal_send_ext_cmd(length + 4, cmd_ce_discovery_nci);
+       if (status != NFCSTATUS_SUCCESS) {
+         NXPLOG_NCIHAL_E("CMD_CE_DISC_NCI: Failed");
+       }
+-- 
+2.39.0
+

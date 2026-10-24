@@ -1,0 +1,68 @@
+From 3d92b1c7a4e58f2016d9c3b5e7a2f48609c4d1e2 Mon Sep 17 00:00:00 2001
+From: KL5n NFC bringup <nfc@localhost>
+Date: Sat, 24 Oct 2026 03:05:00 +0700
+Subject: [PATCH 2/2] nfc: deactivate discovery before re-configuring RF_DISCOVER
+
+Android 16's libnfc-nci re-sends RF_DISCOVER to (re)configure discovery
+instead of deactivating first.  On the KL5n this is visible as two identical
+21 03 0F 07 ... writes 26 ms apart, immediately before the tag activates:
+
+    00:56:40.396 nfc-service.nxp: preDiscover
+    00:56:40.400 NxpNciX : len =  18 > 21030F070001010102018001810106017001
+    00:56:40.401 NxpNciR : len =   4 > 41030100          <- RSP OK
+    00:56:40.402 nfc-service.nxp: preDiscover
+    00:56:40.426 NxpNciX : len =  18 > 21030F070001010102018001810106017001
+    00:56:40.428 NxpNciR : len =  44 > 61052901...       <- RF_INTF_ACTIVATED_NTF
+    00:56:40.430 NxpNciR : len =   4 > 60070106          <- CORE_GENERIC_ERROR_NTF, not 41030100
+    00:56:42.052 libnfc_nci: reSelect: timeout            <- controller stops servicing the session
+    00:56:42.471 libnfc_nci: nfc_ncif_cmd_timeout
+
+The second RF_DISCOVER arrives while discovery is already running, so the
+NFCC answers CORE_GENERIC_ERROR_NTF (status 0x06) instead of RF_DISCOVER_RSP.
+The HAL's pending-command bookkeeping is then out of step with the controller
+and the ongoing tag session is lost: reSelect timeouts, NFC_RW_INTF_ERROR_EVT
+and finally nfc_ncif_cmd_timeout -> restartStack.
+
+The HAL already tracks whether it has seen a discovery command
+(NciDiscoveryCommandBuilder::isRfDiscoveryCommandReceived(), cleared in
+phNxpNciHal_MinOpen() and set for every RF_DISCOVER in phNxpNciHal_write()),
+so use that to deactivate the running discovery before handing the new
+configuration to the controller.  RF_DEACTIVATE type DISCOVERY (0x03) is the
+same command libnfc-nci itself issues when it restarts discovery.
+
+Test: NCF_KL5n, tag reads with a T4T/ISO-DEP card plus an NFC-A only card.
+Expected: no 60070106 after the activation, no reSelect timeouts, and the tag
+is dispatched.
+
+--- a/snxxx/halimpl/hal/phNxpNciHal.cc
++++ b/snxxx/halimpl/hal/phNxpNciHal.cc
+@@ -1152,9 +1152,26 @@
+   } else if (phNxpNciHal_isVendorSpecificCommand(data_len, p_data)) {
+     phNxpNciHal_print_packet("SEND", p_data, data_len,
+                              RfFwRegionDnld_handle == NULL);
+     return phNxpNciHal_handleVendorSpecificCommand(data_len, p_data);
+   } else if (p_data[NCI_GID_INDEX] == NCI_RF_DISC_COMMD_GID &&
+              p_data[NCI_OID_INDEX] == NCI_RF_DISC_COMMAND_OID) {
++    /* Android 16's libnfc-nci sends RF_DISCOVER again to reconfigure an
++     * already running discovery (two identical 21 03 ... writes within 26 ms
++     * are visible in the KL5n logs, right before the tag is activated).  This
++     * NFCC answers that with CORE_GENERIC_ERROR_NTF
++     * (DISCOVERY_ALREADY_STARTED) instead of RF_DISCOVER_RSP; the pending
++     * command bookkeeping is left dangling and the controller stops servicing
++     * the ongoing tag session (reSelect timeouts ->
++     * NFC_RW_INTF_ERROR_EVT / nfc_ncif_cmd_timeout).  Deactivate discovery
++     * first so the reconfigure is accepted. */
++    if (NciDiscoveryCommandBuilderInstance.isRfDiscoveryCommandReceived()) {
++      static uint8_t cmd_rf_deactivate_nci[] = {0x21, 0x06, 0x01, 0x03};
++      NFCSTATUS deact_status = phNxpNciHal_send_ext_cmd_ntf(
++          (uint16_t)sizeof(cmd_rf_deactivate_nci), cmd_rf_deactivate_nci);
++      if (deact_status != NFCSTATUS_SUCCESS) {
++        NXPLOG_NCIHAL_E("RF_DEACTIVATE before RF_DISCOVER reconfig: Failed");
++      }
++    }
+     NciDiscoveryCommandBuilderInstance.setDiscoveryCommand(data_len, p_data);
+     if (isObserveModeEnabled()) {
+       vector<uint8_t> v_data =
+-- 
+2.39.0
+
