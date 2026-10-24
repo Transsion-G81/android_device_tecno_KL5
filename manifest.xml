@@ -243,4 +243,18 @@
         <version>2.1</version>
         <fqname>@2.1::IGoodixFingerprintDaemon/default</fqname>
     </hal>
+    <!-- KL5n: SIM-based Secure Element.  MTK/Transsion prebuilt HAL
+         (android.hardware.secure_element@1.2-service-mediatek, packaged by
+         vendor/tecno/KL5/KL5n-nfc.mk).  com.android.se enumerates instances
+         from this manifest - without the declaration getReaders() stays empty
+         and the NFC stack's SE discovery (CMD_CE_DISC_NCI) times out on every
+         enable, which is what made NFC unusable.  Version/instances match the
+         framework compatibility matrix: 1.0-2, SIM[1-9][0-9]*. -->
+    <hal format="hidl">
+        <name>android.hardware.secure_element</name>
+        <transport>hwbinder</transport>
+        <version>1.2</version>
+        <fqname>@1.2::ISecureElement/SIM1</fqname>
+        <fqname>@1.2::ISecureElement/SIM2</fqname>
+    </hal>
 </manifest>
