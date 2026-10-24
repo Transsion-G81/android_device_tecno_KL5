@@ -51,9 +51,10 @@ In `phNxpNciHal.cc`:
 ## Patches
 
 * `0001-phNxpNciHal-stop-discovery-before-CE-discovery.patch`
-  `RF_DEACTIVATE(DISCOVERY)` before the CE-discovery in `phNxpNciHal_close()`.
-  Fixes `CMD_CE_DISC_NCI: Failed`, the `CORE_RESET` underneath the running
-  stack, and therefore the `restartStack` on/off loop.
+  `RF_DEACTIVATE` (deactivate-to-idle, `21 06 01 00` - the same command
+  `phNxpNciHal_configDiscShutdown()` already sends) before the CE-discovery in
+  `phNxpNciHal_close()`. Fixes `CMD_CE_DISC_NCI: Failed`, the `CORE_RESET`
+  underneath the running stack, and therefore the `restartStack` on/off loop.
 * `0002-phNxpNciHal-deactivate-before-rf-discover-reconfig.patch`
   In the `RF_DISCOVER` branch of `phNxpNciHal_write()`, if discovery is already
   running (`NciDiscoveryCommandBuilderInstance.isRfDiscoveryCommandReceived()`)
@@ -62,16 +63,32 @@ In `phNxpNciHal.cc`:
 
 ### Apply
 
+The patches live in the device tree, next to this file:
+`device/tecno/KL5/patches/nfc/` - on the build server,
+`~/los23/device/tecno/KL5/patches/nfc/`. They are a two-patch series (`0002` is
+diffed on top of `0001`), so apply them together and in order.
+
 ```sh
-cd hardware/nxp/nfc                      # from the LineageOS manifest
-git apply /path/to/nfcfix/0001-*.patch /path/to/nfcfix/0002-*.patch
-# or, if the tree has drifted:
-# patch -p1 --fuzz=3 < /path/to/nfcfix/0001-*.patch
-# patch -p1 --fuzz=3 < /path/to/nfcfix/0002-*.patch
+cd ~/los23/hardware/nxp/nfc              # the snxxx HAL repo
+git apply ~/los23/device/tecno/KL5/patches/nfc/0001-*.patch \
+          ~/los23/device/tecno/KL5/patches/nfc/0002-*.patch
+
+# or commit them onto your branch (both are mail-format patches):
+git am  ~/los23/device/tecno/KL5/patches/nfc/0001-*.patch \
+        ~/los23/device/tecno/KL5/patches/nfc/0002-*.patch
+
+# if your tree has drifted from lineage-23.2:
+# patch -p1 --fuzz=3 < ~/los23/device/tecno/KL5/patches/nfc/0001-*.patch
+# patch -p1 --fuzz=3 < ~/los23/device/tecno/KL5/patches/nfc/0002-*.patch
 
 # build
 m android.hardware.nfc-service.nxp
 ```
+
+Verified against `lineage-23.2` on 2026-10-24
+(`snxxx/halimpl/hal/phNxpNciHal.cc`, 160295 bytes, blob `c0a39b8`):
+`git apply --check`, `git apply` and `git am` all apply the series cleanly and
+produce exactly the same result - 31 inserted lines in that one file (15 + 16).
 
 `vendor/tecno/KL5/KL5n-nfc.mk` already packages that module, so nothing else in
 the tree changes. Consider adding a note about these patches to the `KL5n-nfc.mk`
