@@ -94,6 +94,20 @@ produce exactly the same result - 31 inserted lines in that one file (15 + 16).
 the tree changes. Consider adding a note about these patches to the `KL5n-nfc.mk`
 header comment (next to the existing "How the stack fits together" block).
 
+### Automating (opt-in)
+
+`vendorsetup.sh` in the device tree applies the two patches for you. Export the
+switch before sourcing envsetup.sh:
+
+```sh
+export PATCH_NFC=true        # then: source build/envsetup.sh
+```
+
+It is idempotent - an already applied (or already committed) patch is detected
+with `git apply --reverse --check` and skipped - so re-running it after a
+`repo sync` repairs the tree instead of failing. Without `PATCH_NFC` the script
+prints nothing and touches nothing.
+
 ## Test without a rebuild (close-path half only)
 
 Adding these two lines to `proprietary_kl5n/vendor/etc/libnfc-nxp.conf` makes the
