@@ -11,6 +11,26 @@
      NOTE: The naming convention is "config_camelCaseValue". Some legacy
      entries do not follow the convention, but all new entries should. -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Display cutout (punch-hole) geometry from the stock KL5n overlay
+         (TECNO-KL5n-KL5n-XK678ORUWXAdAeAfP-U-OP-260710V808,
+         product/overlay/framework-res__auto_generated_rro_product.apk):
+         a 48dp x 40dp rectangle centred on the top edge.
+
+         This is what gives the status bar its stock height: SystemBarUtils
+         .getStatusBarHeight() returns
+
+             max(cutout.safeInsetTop, status_bar_height_default + waterfallTop)
+
+         so with the 40dp hole the app-visible inset equals
+         status_bar_height_portrait (40dip) while status_bar_height_default
+         stays at the AOSP base of 24dp.  In landscape the safe inset is 0 and
+         apps fall back to 24dp against the 28dip landscape bar, as on stock.
+
+         The stock overlay also carries tran_display_cutout_center_point
+         "(360,45)" and tran_display_cutout_radius 25; those belong to the
+         TECNO SystemUI fork and are not AOSP resources, so they are omitted. -->
+    <string name="config_mainBuiltInDisplayCutout" translatable="false">M -24,0 L -24,40 L 24,40 L 24,0 Z @dp</string>
+
     <!-- Array of desired screen brightness in nits corresponding to the lux values
       in the config_autoBrightnessLevels array. As with config_screenBrightnessMinimumNits and
       config_screenBrightnessMaximumNits, the display brightness is defined as the measured

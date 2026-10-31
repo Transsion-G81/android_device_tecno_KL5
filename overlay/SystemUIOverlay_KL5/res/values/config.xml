@@ -11,19 +11,20 @@
      NOTE: The naming convention is "config_camelCaseValue". Some legacy
      entries do not follow the convention, but all new entries should. -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <!-- KL5n: the status bar metrics below follow the X6532 overlay this port was
-         based on - the rest of that overlay was already byte-identical. -->
+    <!-- Status bar metrics from the stock KL5n SystemUI
+         (TECNO-KL5n-KL5n-XK678ORUWXAdAeAfP-U-OP-260710V808,
+         system_ext/priv-app/TranSystemUI/TranSystemUI.apk): start/end padding are
+         4dp.  status_bar_header_height_keyguard is *not* overridden - both AOSP
+         and stock define it as @dimen/status_bar_height, so it follows the bar
+         height (see FrameworksResOverlay_KL5). -->
     <!-- the padding on the start of the statusbar -->
-    <dimen name="status_bar_padding_start">16dp</dimen>
+    <dimen name="status_bar_padding_start">4dp</dimen>
 
     <!-- the padding on the end of the statusbar -->
-    <dimen name="status_bar_padding_end">0dp</dimen>
+    <dimen name="status_bar_padding_end">4dp</dimen>
 
     <!-- Margin on the left side of the carrier text on Keyguard -->
     <dimen name="keyguard_carrier_text_margin">20dp</dimen>
-
-    <!-- Height of the status bar header bar when on Keyguard -->
-    <dimen name="status_bar_header_height_keyguard">36dp</dimen>
 
     <!-- Whether or not to show the notification shelf that houses the icons of notifications that
      have been scrolled off-screen. -->
@@ -46,7 +47,7 @@
     <bool name="config_enableNonGroupedNotificationExpand">true</bool>  
 
     <bool name="config_turbulenceNoise">false</bool>
-    <bool name="flag_charging_ripple">true</bool>
+    <bool name="flag_charging_ripple">false</bool>
     <bool name="notification_enable_clipping">false</bool>
     <bool name="qs_enable_clipping">true</bool>   
 
