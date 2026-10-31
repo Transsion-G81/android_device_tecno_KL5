@@ -11,19 +11,10 @@
      NOTE: The naming convention is "config_camelCaseValue". Some legacy
      entries do not follow the convention, but all new entries should. -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <!-- Status bar heights from the stock KL5n overlay
-         (TECNO-KL5n-KL5n-XK678ORUWXAdAeAfP-U-OP-260710V808,
-         product/overlay/framework-res__auto_generated_rro_product.apk):
-         portrait 40dip, landscape 28dip.
-
-         status_bar_height_default is set to 40dip too, on top of the stock
-         punch-hole in res/values/config.xml.  SystemBarUtils.getStatusBarHeight()
-         is max(cutout.safeInsetTop, status_bar_height_default); with the hole
-         giving safeInsetTop = 40dp that is 40dp either way, and pinning the
-         default means the app-visible status bar inset still covers the hole if
-         the cutout is ever unavailable. -->
-    <dimen name="status_bar_height_default">40.0dip</dimen>
-    <dimen name="status_bar_height_portrait">40.0dip</dimen>
+    <!-- Status bar heights: stock is 40dip portrait / 28dip landscape, +4dip so
+         the bar content sits lower under the punch-hole (see config.xml). -->
+    <dimen name="status_bar_height_default">44.0dip</dimen>
+    <dimen name="status_bar_height_portrait">44.0dip</dimen>
     <dimen name="status_bar_height_landscape">28.0dip</dimen>    
     <string name="config_dozeComponent">com.android.systemui/com.android.systemui.doze.DozeService</string>
     <!-- Radius of the software rounded corners at the top of the display in its natural
