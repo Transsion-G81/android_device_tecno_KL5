@@ -14,9 +14,16 @@
     <!-- Status bar heights from the stock KL5n overlay
          (TECNO-KL5n-KL5n-XK678ORUWXAdAeAfP-U-OP-260710V808,
          product/overlay/framework-res__auto_generated_rro_product.apk):
-         portrait 40dip, landscape 28dip.  status_bar_height_default is left at
-         the AOSP base (24dp) - stock relies on the 40dp punch-hole defined in
-         res/values/config.xml for SystemBarUtils.getStatusBarHeight(). -->
+         portrait 40dip, landscape 28dip.
+
+         status_bar_height_default is set to 40dip too.  SystemBarUtils
+         .getStatusBarHeight() returns max(cutout.safeInsetTop,
+         status_bar_height_default), and this ROM defines no display cutout
+         (stock reaches 40dp through its punch-hole, which is deliberately not
+         carried over - introducing a DisplayCutout re-lays-out every window,
+         including the navigation bar), so the default alone has to match the
+         drawn bar height. -->
+    <dimen name="status_bar_height_default">40.0dip</dimen>
     <dimen name="status_bar_height_portrait">40.0dip</dimen>
     <dimen name="status_bar_height_landscape">28.0dip</dimen>    
     <string name="config_dozeComponent">com.android.systemui/com.android.systemui.doze.DozeService</string>
