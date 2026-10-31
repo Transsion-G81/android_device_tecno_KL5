@@ -16,13 +16,12 @@
          product/overlay/framework-res__auto_generated_rro_product.apk):
          portrait 40dip, landscape 28dip.
 
-         status_bar_height_default is set to 40dip too.  SystemBarUtils
-         .getStatusBarHeight() returns max(cutout.safeInsetTop,
-         status_bar_height_default), and this ROM defines no display cutout
-         (stock reaches 40dp through its punch-hole, which is deliberately not
-         carried over - introducing a DisplayCutout re-lays-out every window,
-         including the navigation bar), so the default alone has to match the
-         drawn bar height. -->
+         status_bar_height_default is set to 40dip too, on top of the stock
+         punch-hole in res/values/config.xml.  SystemBarUtils.getStatusBarHeight()
+         is max(cutout.safeInsetTop, status_bar_height_default); with the hole
+         giving safeInsetTop = 40dp that is 40dp either way, and pinning the
+         default means the app-visible status bar inset still covers the hole if
+         the cutout is ever unavailable. -->
     <dimen name="status_bar_height_default">40.0dip</dimen>
     <dimen name="status_bar_height_portrait">40.0dip</dimen>
     <dimen name="status_bar_height_landscape">28.0dip</dimen>    
