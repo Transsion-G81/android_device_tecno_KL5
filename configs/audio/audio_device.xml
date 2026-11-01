@@ -26,42 +26,28 @@
         <!--receiver output-->
         <path name="receiver_output" value="turnon">
             <kctl name="DAC In Mux" value="Normal Path" />
-            <kctl name="HPL Mux" value="Audio Playback" />
-            <kctl name="Headset Volume" value="1" />
-	    <kctl name="SpkrRight Sipa Audio Scene" value="Receiver" />
-            <kctl name="SpkrLeft Sipa Power" value="Off" />
-            <kctl name="SpkrRight Sipa Power" value="On" />	
+            <kctl name="RCV Mux" value="Voice Playback" />
         </path>
         <path name="receiver_output" value="turnoff">
-            <kctl name="HPL Mux" value="Open" />
-		    <kctl name="SpkrLeft Sipa Power" value="Off" />
-            <kctl name="SpkrRight Sipa Power" value="Off" />	
-        </path>
-		<path name="awinic_audio_device_receiver" value="turnon">
-            <kctl name="DAC In Mux" value="Normal Path" />
-            <kctl name="HPL Mux" value="Audio Playback" />
-            <kctl name="aw87xxx_profile_switch_1" value="Receiver" />
-			<kctl name="aw87xxx_profile_switch_0" value="Off" />
-            <kctl name="Headset Volume" value="1" />
-        </path>
-		<path name="awinic_audio_device_receiver" value="turnoff">
-            <kctl name="HPL Mux" value="Open" />
-            <kctl name="aw87xxx_profile_switch_1" value="Off" />
-			<kctl name="aw87xxx_profile_switch_0" value="Off" />
+            <kctl name="RCV Mux" value="Open" />
         </path>
         <!--BSP:modify audio bring up CGCGJH-2359 xinyu.zhao 20211029 start-->
-        <!--BSP:modify audio bring up LHLNHL-7 by denghang.quan 20230206 start-->
         <path name="speaker_2n1_output" value="turnon">
+            <!--BSP:modify audio bring up LHLNHL-7 denghang.quan 20230203 start-->
             <kctl name="Tran_2N1_Speaker_Switch" value="On" />
+            <!--BSP:modify audio bring up LHLNHL-7 denghang.quan 20230203 end-->
         </path>
         <path name="speaker_2n1_output" value="turnoff">
+            <!--BSP:modify audio bring up LHLNHL-7 denghang.quan 20230203 start-->
             <kctl name="Tran_2N1_Speaker_Switch" value="Off" />
+            <!--BSP:modify audio bring up LHLNHL-7 denghang.quan 20230203 end-->
         </path>
-        <!--BSP:modify audio bring up LHLNHL-7 by denghang.quan 20230206 end-->
         <!--set loopback state-->
         <path name="tran_loopback" value="turnon">
+            <kctl name="Tran_LoopBack_Switch" value="On" />
         </path>
         <path name="tran_loopback" value="turnoff">
+            <kctl name="Tran_LoopBack_Switch" value="Off" />
         </path>
        <path name="tran_midtest_loopback_speaker" value="turnon">
            <kctl name="Tran_MidTest_LoopBack_Switch" value="On" />
@@ -95,76 +81,6 @@
         <path name="speaker_output" value="turnoff">
             <kctl name="LOL Mux" value="Open" />
         </path>
-
-        <path name="awinic_speaker_mode_voip" value="setting">
-            <kctl name="aw87xxx_profile_switch_0" value="Voip"/>
-	    <kctl name="aw87xxx_profile_switch_1" value="Voip"/>
-        </path>
-        <path name="awinic_speaker_mode_voice" value="setting">
-            <kctl name="aw87xxx_profile_switch_0" value="Voice"/>
-	    <kctl name="aw87xxx_profile_switch_1" value="Voice"/>
-        </path>
-        <path name="awinic_speaker_mode_music" value="setting">
-            <kctl name="aw87xxx_profile_switch_0" value="Music"/>
-	    <kctl name="aw87xxx_profile_switch_1" value="Music"/>
-        </path>
-        <path name="awinic_speaker_mode_ringtone" value="setting">
-            <kctl name="aw87xxx_profile_switch_0" value="Ring"/>
-	    <kctl name="aw87xxx_profile_switch_1" value="Ring"/>
-        </path>
-		
-		<path name="ext_speaker_output_up" value="turnon">
-		    <kctl name="Ext_Speaker_Amp Switch" value="1" />
-			<kctl name="aw87xxx_profile_switch_1" value="Music"/>
-            <kctl name="aw87xxx_profile_switch_0" value="Off"/>
-       </path>
-       <path name="ext_speaker_output_up" value="turnoff">
-            <kctl name="Ext_Speaker_Amp Switch" value="0" />
-            <kctl name="aw87xxx_profile_switch_0" value="Off"/>
-            <kctl name="aw87xxx_profile_switch_1" value="Off"/>
-       </path>   
-	    <path name="ext_speaker_output_down" value="turnon">
-		    <kctl name="Ext_Speaker_Amp Switch" value="1" />
-			<kctl name="aw87xxx_profile_switch_0" value="Music"/>
-            <kctl name="aw87xxx_profile_switch_1" value="Off"/>
-        </path>
-        <path name="ext_speaker_output_down" value="turnoff">
-            <kctl name="Ext_Speaker_Amp Switch" value="0" />
-            <kctl name="aw87xxx_profile_switch_0" value="Off"/>
-            <kctl name="aw87xxx_profile_switch_1" value="Off"/>
-        </path>
-
-        <path name="ext_sia_speaker_output_up" value="turnon">
-            <kctl name="Ext_Speaker_Amp Switch" value="1" />
-            <kctl name="SpkrLeft Sipa Power" value="Off" />
-        </path>
-        <path name="ext_sia_speaker_output_up" value="turnoff">
-            <kctl name="Ext_Speaker_Amp Switch" value="0" />
-            <kctl name="SpkrLeft Sipa Power" value="Off" />
-            <kctl name="SpkrRight Sipa Power" value="Off" />
-        </path>
-        <path name="ext_sia_speaker_output_down" value="turnon">
-            <kctl name="Ext_Speaker_Amp Switch" value="1" />
-            <kctl name="SpkrRight Sipa Power" value="Off" />
-        </path>
-        <path name="ext_sia_speaker_output_down" value="turnoff">
-            <kctl name="Ext_Speaker_Amp Switch" value="0" />
-            <kctl name="SpkrLeft Sipa Power" value="Off" />
-            <kctl name="SpkrRight Sipa Power" value="Off" />
-        </path>
-		
-		
-		
-		<path name="sipa_speaker_mode_ext_sipa" value="turnon">
-        </path>
-		
-		
-		<path name="sipa_speaker_mode_ext_sipa" value="turnoff">
-		    <kctl name="SpkrLeft Sipa Power" value="Off" />
-            <kctl name="SpkrRight Sipa Power" value="Off" />	
-        </path>
-		
-		
         <!--headhpone dual analogPA speaker output-->
         <path name="headphoneDualSpeaker_output" value="turnon">
             <kctl name="DAC In Mux" value="Normal Path" />
@@ -188,37 +104,10 @@
         <!--external_speaker output-->
         <path name="ext_speaker_output" value="turnon">
             <kctl name="Ext_Speaker_Amp Switch" value="1" />
-            <kctl name="Headset Volume" value="3" />
         </path>
         <path name="ext_speaker_output" value="turnoff">
             <kctl name="Ext_Speaker_Amp Switch" value="0" />
-            <kctl name="aw87xxx_profile_switch_0" value="Off"/>
-            <kctl name="aw87xxx_profile_switch_1" value="Off"/>
         </path>
-	
-	<path name="audiotest_speaker_output" value="turnon">
-		    <kctl name="aw87xxx_profile_switch_0" value="Music" />
-		    <kctl name="aw87xxx_profile_switch_1" value="Off" />
-        </path>
-	
-        <path name="audiotest_speaker_output" value="turnoff">
-		    <kctl name="aw87xxx_profile_switch_0" value="Off" />
-		    <kctl name="aw87xxx_profile_switch_1" value="Off" />
-		    <kctl name="SpkrLeft Sipa Power" value="Off" />
-            <kctl name="SpkrRight Sipa Power" value="Off" />	
-        </path>
-				
-	<path name="audiotest_speaker2_output" value="turnon">
-		    <kctl name="aw87xxx_profile_switch_0" value="Off" />
-		    <kctl name="aw87xxx_profile_switch_1" value="Music" />
-        </path>
-	
-        <path name="audiotest_speaker2_output" value="turnoff">
-		    <kctl name="aw87xxx_profile_switch_0" value="Off" />
-		    <kctl name="aw87xxx_profile_switch_1" value="Off" />
-		    <kctl name="SpkrLeft Sipa Power" value="Off" />
-            <kctl name="SpkrRight Sipa Power" value="Off" />
-	</path>
         <!--mic setting-->
         <path name="builtin_Mic_Mic1" value="turnon">
             <kctl name="ADC L Mux" value="Left Preamplifier" />
