@@ -103,6 +103,7 @@
         </path>
         <!--external_speaker output-->
         <path name="ext_speaker_output" value="turnon">
+            <kctl name="Tran_2N1_Speaker_Switch" value="On" />
             <kctl name="Ext_Speaker_Amp Switch" value="1" />
         </path>
         <path name="ext_speaker_output" value="turnoff">
