@@ -3,20 +3,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-# TECNO Spark 30C 5G (KL5n) — KL5 tree with the imx582 back-camera stack.
-# The ONLY differences from lineage_KL5.mk are the camera bits:
-#   * SOONG_CONFIG selects the KL5n libcameracustom.so prebuilt
-#     (vendor/tecno/KL5/Android.bp soong_config srcs switch)
-#   * device.mk then inherits vendor/tecno/KL5/KL5n-camera.mk for the
-#     imx582 tuning/hdr/anc blobs + IdxMgr modules
-#   * BoardConfig.mk swaps imgsensor_isp4.ko for the imx582-enabled module
-# Identity props are taken from the stock KL5n dump
-# (TECNO-KL5n-KL5n-XK678ORUWXAdAeAfP-U-OP-260710V808).
-#
-
-# Camera variant for the soong_config srcs switch in vendor/tecno/KL5/Android.bp
-# (libcameracustom). Must be set before device.mk: device.mk keys the
-# conditional inherit of KL5n-camera.mk off this same variable.
+# TECNO Spark 30C 5G (KL5n): KL5 tree with the imx582 camera stack.
+# Must be set before device.mk, which keys the KL5n-camera.mk inherit off it.
 SOONG_CONFIG_NAMESPACES += tecno_camera
 SOONG_CONFIG_tecno_camera += camera_variant
 SOONG_CONFIG_tecno_camera_camera_variant := kl5n

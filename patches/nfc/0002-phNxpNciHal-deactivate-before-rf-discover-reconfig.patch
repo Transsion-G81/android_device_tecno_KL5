@@ -1,28 +1,13 @@
 From edbf0b87d06577bcfba038acbb11ad1d4983a147 Mon Sep 17 00:00:00 2001
 From: nazephyrus <naden.irsyad01@gmail.com>
 Date: Sat, 24 Oct 2026 08:44:07 +0700
-Subject: [PATCH 2/2] nfc: deactivate before a re-sent RF_DISCOVER in
- phNxpNciHal_write()
+Subject: [PATCH 2/2] nfc: deactivate before a re-sent RF_DISCOVER in phNxpNciHal_write()
 
-libnfc-nci reconfigures a running discovery by re-sending RF_DISCOVER
-(the KL5n logs show two identical 21 03 writes ~26 ms apart right before
-a tag activates).  The second one is rejected by the PN557 with
-CORE_GENERIC_ERROR_NTF (DISCOVERY_ALREADY_STARTED) instead of
-RF_DISCOVER_RSP, and the controller then stops servicing the tag session
-that was just activated: reSelect timeouts -> nfc_ncif_cmd_timeout ->
-NFA_DM_NFCC_TIMEOUT_EVT -> NfcService: restartStack.
+libnfc-nci reconfigures a running discovery by re-sending RF_DISCOVER; the PN557
+rejects the second one with DISCOVERY_ALREADY_STARTED and stops servicing the
+tag session, which ends in an NfcService stack restart.
 
-When NciDiscoveryCommandBuilderInstance.isRfDiscoveryCommandReceived()
-says a discovery command was already forwarded, send RF_DEACTIVATE
-(deactivate-to-idle) first so the re-sent RF_DISCOVER is accepted.
-phNxpNciHal_send_ext_cmd() consumes the RSP/NTF internally, so the
-injected deactivate is not visible to the stack.
-
-Applies to hardware/nxp/nfc @ lineage-23.2 (snxxx, AIDL HAL).
 ---
- snxxx/halimpl/hal/phNxpNciHal.cc | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
 diff --git a/snxxx/halimpl/hal/phNxpNciHal.cc b/snxxx/halimpl/hal/phNxpNciHal.cc
 index 8c31d5e..3d6785f 100644
 --- a/snxxx/halimpl/hal/phNxpNciHal.cc
