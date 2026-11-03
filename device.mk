@@ -387,6 +387,3 @@ ifneq ($(filter kl5n,$(SOONG_CONFIG_tecno_camera_camera_variant)),)
 $(call inherit-product, vendor/tecno/KL5/KL5n-camera.mk)
 $(call inherit-product, vendor/tecno/KL5/KL5n-nfc.mk)
 endif
-
-# Inherit the sign keys
-$(call inherit-product, vendor/lineage-priv/keys/keys.mk)
