@@ -30,3 +30,9 @@ allow mtk_hal_camera property_socket:sock_file write;
 allow mtk_hal_camera hal_trancamserver_hwservice:hwservice_manager find;
 
 set_prop(mtk_hal_camera, vendor_mtk_camera_prop)
+
+# ro.vendor.soc.*
+get_prop(mtk_hal_camera, vendor_mtk_soc_prop)
+
+# Unlabelled-property reads fail harmlessly; keep them out of the logs.
+dontaudit mtk_hal_camera default_prop:file read;
