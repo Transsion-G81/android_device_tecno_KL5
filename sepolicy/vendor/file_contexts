@@ -44,3 +44,6 @@
 # The HAL executable label and vendor.nxp.nxpnfc_aidl service label come
 # from device/mediatek/sepolicy_vndr (base/vendor/{file,service}_contexts);
 # do not duplicate them here (checkfc fails on identical specs).
+
+# XGSI (logging/init.xgsi-bootlog.rc)
+/data/xgsi(/.*)?                                                        u:object_r:xgsi_log_data_file:s0

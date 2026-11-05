@@ -1,0 +1,29 @@
+# XGSI boot/dmesg log capture (logging/init.xgsi-bootlog.rc).
+# The services carry an explicit seclabel, so no type_transition is needed.
+type xgsi_log, domain;
+type xgsi_log_data_file, file_type, data_file_type;
+
+domain_trans(init, shell_exec, xgsi_log)
+allow xgsi_log toolbox_exec:file rx_file_perms;
+
+# /data/xgsi is created and labeled by init before the services start
+allow xgsi_log xgsi_log_data_file:dir create_dir_perms;
+allow xgsi_log xgsi_log_data_file:file create_file_perms;
+
+# kernel log + /dev/kmsg status lines
+allow xgsi_log kernel:system syslog_read;
+allow xgsi_log kmsg_device:chr_file rw_file_perms;
+
+# logcat
+read_logd(xgsi_log)
+control_logd(xgsi_log)
+get_prop(xgsi_log, system_prop)
+
+# /proc/mounts (dir pick) + previous boot console
+allow xgsi_log proc_mounts:file r_file_perms;
+allow xgsi_log pstorefs:dir search;
+allow xgsi_log pstorefs:file r_file_perms;
+
+# the scripts probe /mnt/vendor/persist and /metadata before /data
+dontaudit xgsi_log persist_data_file:dir { create write add_name };
+dontaudit xgsi_log metadata_file:dir { create write add_name };
