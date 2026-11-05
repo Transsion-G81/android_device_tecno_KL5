@@ -127,4 +127,4 @@ product /product ext4 ro wait,slotselect,avb,logical,first_stage_mount
 /dev/block/by-name/tkv /tkv emmc defaults defaults
 
 # Zram
-/dev/block/zram0              none            swap    defaults zramsize=50%
+/dev/block/zram0              none            swap    defaults zramsize=75%
