@@ -376,6 +376,15 @@ ifeq ($(WITH_XGSI_LOGS),true)
         $(LOCAL_PATH)/logging/xgsi-dmesg.sh:$(TARGET_COPY_OUT_SYSTEM)/etc/xgsi/xgsi-dmesg.sh
 endif
 
+# GMS variant: vanilla / gapps / microg, selected by build-all.sh --gms.  Read at
+# product-config time, so clear out/target/product/<device> when switching mode.
+ifeq ($(WITH_GAPPS),true)
+$(call inherit-product, vendor/gapps/arm64/arm64-vendor.mk)
+endif
+ifeq ($(WITH_MICROG),true)
+$(call inherit-product, vendor/partner_gms/microg.mk)
+endif
+
 PRODUCT_COPY_FILES += \
     $(call find-copy-subdir-files,*,$(LOCAL_PATH)/configs/wifi/,$(TARGET_COPY_OUT_VENDOR)/etc/wifi)
 
