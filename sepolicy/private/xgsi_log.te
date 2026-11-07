@@ -1,6 +1,7 @@
 # XGSI boot/dmesg log capture (logging/init.xgsi-bootlog.rc).
-# The services carry an explicit seclabel, so no type_transition is needed.
-type xgsi_log, domain;
+# It runs /system/bin/sh + logcat, so it must be a system-side (coredomain)
+# domain; keep this policy in the system_ext sepolicy dir.
+type xgsi_log, domain, coredomain;
 type xgsi_log_data_file, file_type, data_file_type;
 
 domain_trans(init, shell_exec, xgsi_log)
