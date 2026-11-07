@@ -1,5 +1,5 @@
 # XGSI da1adf94cf77
-service xgsi_dmesg /system/bin/sh /system/etc/init/xgsi-dmesg.sh
+service xgsi_dmesg /system/bin/sh /system/etc/xgsi/xgsi-dmesg.sh
     class core
     user root
     group root log readproc
@@ -7,7 +7,7 @@ service xgsi_dmesg /system/bin/sh /system/etc/init/xgsi-dmesg.sh
     oneshot
     disabled
 
-service xgsi_bootlog /system/bin/sh /system/etc/init/xgsi-bootlog.sh
+service xgsi_bootlog /system/bin/sh /system/etc/xgsi/xgsi-bootlog.sh
     class core
     user root
     group root log readproc

@@ -2,7 +2,7 @@
 # It runs /system/bin/sh + logcat, so it must be a system-side (coredomain)
 # domain; keep this policy in the system_ext sepolicy dir.
 type xgsi_log, domain, coredomain;
-type xgsi_log_data_file, file_type, data_file_type;
+type xgsi_log_data_file, file_type, data_file_type, core_data_file_type;
 
 domain_trans(init, shell_exec, xgsi_log)
 allow xgsi_log toolbox_exec:file rx_file_perms;
@@ -20,10 +20,9 @@ read_logd(xgsi_log)
 control_logd(xgsi_log)
 get_prop(xgsi_log, system_prop)
 
-# /proc/mounts (dir pick) + previous boot console
+# /proc/mounts (dir pick); /sys/fs/pstore (previous boot console) is
+# forbidden to coredomain by coredomain.te, so it cannot be read here
 allow xgsi_log proc_mounts:file r_file_perms;
-allow xgsi_log pstorefs:dir search;
-allow xgsi_log pstorefs:file r_file_perms;
 
 # the scripts probe /metadata before /data; /mnt/vendor/persist is a
 # vendor-only type and is not visible to this system-side (system_ext) policy
