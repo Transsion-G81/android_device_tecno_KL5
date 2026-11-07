@@ -382,6 +382,11 @@ ifeq ($(WITH_GAPPS),true)
 $(call inherit-product, vendor/gapps/arm64/arm64-vendor.mk)
 endif
 ifeq ($(WITH_MICROG),true)
+# microG's tree has no soong_namespace, so its modules (GmsCore, ...) would sit in
+# Soong's always-exported root namespace and clash with gapps' GmsCore on the
+# gapps pass.  Namespace it and export only under WITH_MICROG (build-all.sh drops
+# vendor/partner_gms/Android.bp in place).
+PRODUCT_SOONG_NAMESPACES += vendor/partner_gms
 $(call inherit-product, vendor/partner_gms/microg.mk)
 endif
 
