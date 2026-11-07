@@ -25,6 +25,6 @@ allow xgsi_log proc_mounts:file r_file_perms;
 allow xgsi_log pstorefs:dir search;
 allow xgsi_log pstorefs:file r_file_perms;
 
-# the scripts probe /mnt/vendor/persist and /metadata before /data
-dontaudit xgsi_log persist_data_file:dir { create write add_name };
+# the scripts probe /metadata before /data; /mnt/vendor/persist is a
+# vendor-only type and is not visible to this system-side (system_ext) policy
 dontaudit xgsi_log metadata_file:dir { create write add_name };
