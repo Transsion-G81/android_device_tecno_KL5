@@ -11,9 +11,10 @@
      NOTE: The naming convention is "config_camelCaseValue". Some legacy
      entries do not follow the convention, but all new entries should. -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <!-- Stock KL5n SystemUI status bar metrics: start/end padding 4dp. -->
+    <!-- Stock KL5n SystemUI status bar metrics: end padding 4dp. Start is
+         nudged to 12dp so the left clock clears the 12dp display corner. -->
     <!-- the padding on the start of the statusbar -->
-    <dimen name="status_bar_padding_start">4dp</dimen>
+    <dimen name="status_bar_padding_start">12dp</dimen>
 
     <!-- the padding on the end of the statusbar -->
     <dimen name="status_bar_padding_end">4dp</dimen>
