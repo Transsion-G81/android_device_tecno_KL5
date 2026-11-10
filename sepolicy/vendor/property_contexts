@@ -3,6 +3,8 @@ vendor.audiomediatek. u:object_r:vendor_audioserver_prop:s0
 
 # Camera
 persist.vendor.camera.                      u:object_r:vendor_camera_prop:s0
+persist.vendor.cam.param.front.version      u:object_r:vendor_mtk_camera_prop:s0
+persist.vendor.cam.param.back.version       u:object_r:vendor_mtk_camera_prop:s0
 vendor.debug.seninf.hs_trail                u:object_r:vendor_mtk_camera_prop:s0
 ro.vendor.camera_tran_hal_server_support    u:object_r:vendor_mtk_camera_prop:s0
 ro.vendor.camera_tran_fake_stereo_support   u:object_r:vendor_mtk_camera_prop:s0

@@ -1,0 +1,40 @@
+From edbf0b87d06577bcfba038acbb11ad1d4983a147 Mon Sep 17 00:00:00 2001
+From: nazephyrus <naden.irsyad01@gmail.com>
+Date: Sat, 24 Oct 2026 08:44:07 +0700
+Subject: [PATCH 2/2] nfc: deactivate before a re-sent RF_DISCOVER in phNxpNciHal_write()
+
+libnfc-nci reconfigures a running discovery by re-sending RF_DISCOVER; the PN557
+rejects the second one with DISCOVERY_ALREADY_STARTED and stops servicing the
+tag session, which ends in an NfcService stack restart.
+
+---
+diff --git a/snxxx/halimpl/hal/phNxpNciHal.cc b/snxxx/halimpl/hal/phNxpNciHal.cc
+index 8c31d5e..3d6785f 100644
+--- a/snxxx/halimpl/hal/phNxpNciHal.cc
++++ b/snxxx/halimpl/hal/phNxpNciHal.cc
+@@ -1155,6 +1155,22 @@ int phNxpNciHal_write(uint16_t data_len, const uint8_t* p_data) {
+     return phNxpNciHal_handleVendorSpecificCommand(data_len, p_data);
+   } else if (p_data[NCI_GID_INDEX] == NCI_RF_DISC_COMMD_GID &&
+              p_data[NCI_OID_INDEX] == NCI_RF_DISC_COMMAND_OID) {
++    /* libnfc-nci re-sends RF_DISCOVER to reconfigure an already running
++     * discovery (two identical 21 03 writes 26 ms apart appear in the KL5n
++     * logs right before the tag activates).  The NFCC answers the second one
++     * with CORE_GENERIC_ERROR_NTF (DISCOVERY_ALREADY_STARTED) instead of
++     * RF_DISCOVER_RSP and then stops servicing the ongoing tag session
++     * (reSelect timeouts -> nfc_ncif_cmd_timeout).  Stop the running discovery
++     * first so the re-send is accepted - this is the same command libnfc-nci
++     * itself uses when it restarts discovery. */
++    if (NciDiscoveryCommandBuilderInstance.isRfDiscoveryCommandReceived()) {
++      uint8_t cmd_disable_disc[] = {0x21, 0x06, 0x01, 0x00};
++      NFCSTATUS status = phNxpNciHal_send_ext_cmd(sizeof(cmd_disable_disc),
++                                                  cmd_disable_disc);
++      if (status != NFCSTATUS_SUCCESS) {
++        NXPLOG_NCIHAL_E("CMD_DISABLE_DISCOVERY before RF_DISCOVER: Failed");
++      }
++    }
+     NciDiscoveryCommandBuilderInstance.setDiscoveryCommand(data_len, p_data);
+     if (isObserveModeEnabled()) {
+       vector<uint8_t> v_data =
+-- 
+2.53.0.windows.2
+

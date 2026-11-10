@@ -1,0 +1,4 @@
+# NFC (KL5n - NXP PN553)
+# The vendor.nxp.nxpnfc_aidl.INxpNfc/default service label is provided by
+# device/mediatek/sepolicy_vndr (base/vendor/service_contexts); do not
+# duplicate it here (checkpolicy rejects redeclared services).

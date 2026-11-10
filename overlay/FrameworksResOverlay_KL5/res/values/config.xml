@@ -11,6 +11,10 @@
      NOTE: The naming convention is "config_camelCaseValue". Some legacy
      entries do not follow the convention, but all new entries should. -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Stock KL5n punch-hole (48x40dp): keeps the status bar and app headers
+         clear of the camera. -->
+    <string name="config_mainBuiltInDisplayCutout" translatable="false">M -24,0 L -24,40 L 24,40 L 24,0 Z @dp</string>
+
     <!-- Array of desired screen brightness in nits corresponding to the lux values
       in the config_autoBrightnessLevels array. As with config_screenBrightnessMinimumNits and
       config_screenBrightnessMaximumNits, the display brightness is defined as the measured

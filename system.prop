@@ -32,6 +32,9 @@ ro.config.per_app_memcg=false
 ro.vendor.mtk_omacp_support=1
 ro.vendor.mtk_telephony_add_on_policy=0
 
+# RescueParty
+persist.sys.disable_rescue=true
+
 # Performance
 ro.mtk_perf_fast_start_win=1
 ro.mtk_perf_response_time=1

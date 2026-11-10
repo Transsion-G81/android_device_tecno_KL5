@@ -115,6 +115,17 @@ BOARD_VENDOR_RAMDISK_KERNEL_MODULES := $(sort $(BOARD_VENDOR_RAMDISK_KERNEL_MODU
 BOARD_VENDOR_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/modules/modules.load.vendor))
 BOARD_VENDOR_KERNEL_MODULES := $(wildcard $(KERNEL_PATH)/modules/vendor/*.ko)
 
+## KL5n: the KL5 kernel tree's imgsensor_isp4.ko has no imx582 support
+## (its camera sensor list stops at hi5022q/s5kjn1/gc08a8/hi846). Swap in the
+## vermagic-patched module shipped in the vendor tree (stock KL5n ko, vermagic
+## rewritten from 5.10.237-android12-9+ to 5.10.209-android12-9+). The module
+## keeps the same basename so modules.load.vendor and the init.insmod scripts
+## need no changes.
+ifneq ($(filter lineage_KL5n,$(PRODUCT_NAME)),)
+BOARD_VENDOR_KERNEL_MODULES := $(filter-out %/imgsensor_isp4.ko,$(BOARD_VENDOR_KERNEL_MODULES))
+BOARD_VENDOR_KERNEL_MODULES += vendor/tecno/KL5/proprietary_kl5n/vendor/lib/modules/imgsensor_isp4.ko
+endif
+
 # Partitions
 BOARD_FLASH_BLOCK_SIZE := 262144 # BOARD_KERNEL_PAGESIZE * 64
 BOARD_DTBOIMG_PARTITION_SIZE := 8388608

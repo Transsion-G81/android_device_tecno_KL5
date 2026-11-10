@@ -76,12 +76,12 @@ blob_fixups: blob_fixups_user_type = {
 }  # fmt: skip
 
 module = ExtractUtilsModule(
-    'X6531',
-    'infinix',
+    'KL5',
+    'tecno',
     blob_fixups=blob_fixups,
     lib_fixups=lib_fixups,
     namespace_imports=namespace_imports,
-    add_firmware_proprietary_file=False,
+    add_firmware_proprietary_file=True,
 )
 
 if __name__ == '__main__':

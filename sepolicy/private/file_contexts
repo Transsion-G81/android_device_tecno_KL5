@@ -1,0 +1,2 @@
+# XGSI (logging/init.xgsi-bootlog.rc)
+/data/xgsi(/.*)? u:object_r:xgsi_log_data_file:s0

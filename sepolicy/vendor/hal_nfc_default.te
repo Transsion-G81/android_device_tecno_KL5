@@ -1,0 +1,5 @@
+# NFC (KL5n - NXP PN553): let the NXP AIDL ext HAL register its
+# vendor.nxp.nxpnfc_aidl.INxpNfc service (typed hal_nfc_service by
+# service_contexts).  Mirrors gale_device_tree; redundant with AOSP
+# rules for the stock android.hardware.nfc INfc service, harmless.
+allow hal_nfc_default hal_nfc_service:service_manager add;

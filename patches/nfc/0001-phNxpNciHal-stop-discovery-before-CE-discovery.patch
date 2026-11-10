@@ -1,0 +1,47 @@
+From 332425243bf78f3ac3894c912ff2bcb3adb43caa Mon Sep 17 00:00:00 2001
+From: nazephyrus <naden.irsyad01@gmail.com>
+Date: Sat, 24 Oct 2026 08:44:06 +0700
+Subject: [PATCH 1/2] nfc: stop RF discovery before the CE-discovery in phNxpNciHal_close()
+
+Send RF_DEACTIVATE back to idle before the CE handover discovery in
+phNxpNciHal_close().  Android 16's libnfc-nci closes the HAL with discovery
+still running, so the PN557 answers RF_DISCOVER with DISCOVERY_ALREADY_STARTED
+instead of RF_DISCOVER_RSP and NfcService restarts the stack.
+
+---
+diff --git a/snxxx/halimpl/hal/phNxpNciHal.cc b/snxxx/halimpl/hal/phNxpNciHal.cc
+index c0a39b8..8c31d5e 100644
+--- a/snxxx/halimpl/hal/phNxpNciHal.cc
++++ b/snxxx/halimpl/hal/phNxpNciHal.cc
+@@ -2384,6 +2384,8 @@ int phNxpNciHal_close(bool bShutdown) {
+   uint8_t cmd_ce_in_phone_off_pn557[] = {0x20, 0x02, 0x05, 0x01,
+                                          0xA0, 0x07, 0x01, 0x02};
+   uint8_t cmd_system_set_service_status[] = {0x2F, 0x01, 0x01, 0x00};
++  /* RF_DEACTIVATE(DISCOVERY) - stop the discovery that is still running here. */
++  uint8_t cmd_disable_disc[] = {0x21, 0x06, 0x01, 0x00};
+   uint8_t length = 0;
+   uint8_t numPrms = 0;
+   uint8_t ptr = 4;
+@@ -2498,6 +2500,19 @@ int phNxpNciHal_close(bool bShutdown) {
+     }
+ 
+     if (length != 0) {
++      /* Android 16's libnfc-nci closes the HAL without an RF_DEACTIVATE, so
++       * discovery is still running when the CE handover below sends its
++       * listen-only RF_DISCOVER.  The NFCC answers that with
++       * CORE_GENERIC_ERROR_NTF (DISCOVERY_ALREADY_STARTED) instead of
++       * RF_DISCOVER_RSP; the HAL then logs CMD_CE_DISC_NCI: Failed and resets
++       * the controller underneath the running stack, so NfcService restarts
++       * the whole NFC stack in a loop.  Stop discovery first - the handover
++       * below is a fresh, listen-only discovery. */
++      status = phNxpNciHal_send_ext_cmd(sizeof(cmd_disable_disc),
++                                        cmd_disable_disc);
++      if (status != NFCSTATUS_SUCCESS) {
++        NXPLOG_NCIHAL_E("CMD_DISABLE_DISCOVERY before CE discovery: Failed");
++      }
+       cmd_ce_discovery_nci[2] = length + 1;
+       cmd_ce_discovery_nci[3] = numPrms;
+       status = phNxpNciHal_send_ext_cmd(length + 4, cmd_ce_discovery_nci);
+-- 
+2.53.0.windows.2
+

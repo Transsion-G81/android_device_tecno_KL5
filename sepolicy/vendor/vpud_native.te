@@ -1,0 +1,3 @@
+# Property enumeration also touches the unlabelled (default_prop) area; the reads
+# fail harmlessly, so keep them out of the logs.
+dontaudit vpud_native default_prop:file read;
