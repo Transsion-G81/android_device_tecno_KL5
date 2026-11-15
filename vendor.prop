@@ -239,19 +239,31 @@ ro.vendor.mtk.sensor.support=yes
 # SurfaceFlinger
 debug.sf.enable_gl_backpressure=0
 debug.sf.latch_unsignaled=true
-debug.sf.auto_latch_unsignaled=false
-debug.sf.predict_hwc_composition_strategy=0
+debug.sf.auto_latch_unsignaled=true
+debug.sf.predict_hwc_composition_strategy=1
 debug.sf.enable_transaction_tracing=false
 debug.sf.enable_hwc_vds=0
 debug.sf.disable_backpressure=1
 debug.sf.use_phase_offsets_as_durations=1
-debug.sf.late.sf.duration=30000000
-debug.sf.late.app.duration=10000000
-debug.sf.early.sf.duration=30000000
-debug.sf.early.app.duration=20000000
-debug.sf.earlyGl.sf.duration=30000000
-debug.sf.earlyGl.app.duration=20000000
-debug.sf.hwc.min.duration=23000000
+debug.sf.late.sf.duration=14600000
+debug.sf.late.app.duration=16666666
+debug.sf.early.sf.duration=17600000
+debug.sf.early.app.duration=19000000
+debug.sf.earlyGl.sf.duration=19600000
+debug.sf.earlyGl.app.duration=21000000
+debug.sf.late.sf.duration.90=9500000
+debug.sf.late.app.duration.90=11111111
+debug.sf.early.sf.duration.90=12500000
+debug.sf.early.app.duration.90=14000000
+debug.sf.earlyGl.sf.duration.90=14000000
+debug.sf.earlyGl.app.duration.90=15500000
+debug.sf.late.sf.duration.120=7500000
+debug.sf.late.app.duration.120=8333333
+debug.sf.early.sf.duration.120=10500000
+debug.sf.early.app.duration.120=11500000
+debug.sf.earlyGl.sf.duration.120=12000000
+debug.sf.earlyGl.app.duration.120=13000000
+debug.sf.hwc.min.duration=1700000
 ro.surface_flinger.primary_display_orientation=ORIENTATION_0
 ro.surface_flinger.force_hwc_copy_for_virtual_displays=true
 ro.surface_flinger.max_frame_buffer_acquired_buffers=3
@@ -260,6 +272,12 @@ debug.sf.color_mode=0
 persist.sys.sf.native_mode=1
 ro.surface_flinger.use_color_management=false
 ro.surface_flinger.default_composition_pixel_format=RGBX_8888
+
+# PowerHAL
+vendor.powerhal.disp.idle_support=false
+vendor.powerhal.interaction.min=250
+vendor.powerhal.interaction.offset=150
+vendor.powerhal.interaction.max=1000
 
 # Trusted Execution Environment (TEE)
 ro.vendor.mtk_microtrust_tee_support=1
