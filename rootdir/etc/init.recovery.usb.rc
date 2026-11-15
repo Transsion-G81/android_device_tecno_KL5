@@ -4,3 +4,8 @@ on init
     setprop sys.usb.ffs.ready 1
     setprop sys.usb.controller "musb-hdrc"
     setprop vendor.usb.controller "musb-hdrc"
+
+on boot
+    # Arm Transsion OTG host path for recovery USB OTG enumeration
+    chmod 0666 /sys/devices/platform/odm/odm:tran_battery/OTG_CTL
+    write /sys/devices/platform/odm/odm:tran_battery/OTG_CTL "1"

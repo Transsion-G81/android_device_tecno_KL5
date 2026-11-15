@@ -286,6 +286,11 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     init.recovery.usb.rc
 
+# Recovery touch firmware (DTB sets firmware_class.path=/vendor/firmware)
+PRODUCT_COPY_FILES += \
+    vendor/tecno/KL5/proprietary/vendor/firmware/hdl_firmware_00.img:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/firmware/hdl_firmware_00.img \
+    vendor/tecno/KL5/proprietary/vendor/firmware/hdl_firmware_01.img:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/firmware/hdl_firmware_01.img
+
 PRODUCT_PACKAGES += \
     libsensorndkbridge:64 \
     android.hardware.sensors@1.0.vendor:64 \
