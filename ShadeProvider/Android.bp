@@ -1,0 +1,37 @@
+//
+// Copyright (C) 2024-2026 The LineageOS Project
+//
+// SPDX-License-Identifier: Apache-2.0
+//
+
+android_app {
+    name: "ShadeProvider.tran",
+    srcs: ["src/**/*.java"],
+    resource_dirs: ["res"],
+    manifest: "AndroidManifest.xml",
+    sdk_version: "current",
+    certificate: "platform",
+    privileged: true,
+    system_ext_specific: true,
+
+    required: [
+        "privapp_whitelist_shadeprovider",
+        "config-shadeprovider",
+    ],
+}
+
+prebuilt_etc {
+    name: "privapp_whitelist_shadeprovider",
+    relative_install_path: "permissions",
+    src: "privapp_whitelist_shadeprovider.xml",
+    system_ext_specific: true,
+    filename_from_src: true,
+}
+
+prebuilt_etc {
+    name: "config-shadeprovider",
+    relative_install_path: "sysconfig",
+    src: "shadeprovider-whitelist.xml",
+    system_ext_specific: true,
+    filename_from_src: true,
+}

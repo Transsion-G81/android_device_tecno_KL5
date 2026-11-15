@@ -72,6 +72,7 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     Audioservice.tran \
+    ShadeProvider.tran \
     MtkInCallService
 
 PRODUCT_PACKAGES += \

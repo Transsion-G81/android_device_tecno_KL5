@@ -1,0 +1,4 @@
+<config>
+    <allow-in-power-save package="com.shade.handler" />
+    <allow-in-data-usage-save package="com.shade.handler" />
+</config>
