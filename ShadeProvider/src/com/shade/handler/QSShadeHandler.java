@@ -1,30 +1,47 @@
 package com.shade.handler;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.database.ContentObserver;
+import android.hardware.display.DisplayManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.os.Parcel;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Display;
 
 import java.lang.reflect.Method;
 
 public class QSShadeHandler extends Service {
     private static final String TAG = "QSShadeHandler";
     private static final String SETTING_QS_EXPANDED = "qs.fps.expanded";
-    private static final String SETTING_DISABLE_BLURS = "disable_window_blurs";
-    private static final int SF_TX_SET_DEBUG_MODE = 1035;
+    private static final String SETTING_PEAK_REFRESH_RATE = "peak_refresh_rate";
+    private static final String SETTING_MIN_REFRESH_RATE = "min_refresh_rate";
     private static final long RESTORE_DELAY_MS = 150L;
+    private static final long WAKE_BOUNCE_TIMEOUT_MS = 120L;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
+    private DisplayManager displayManager;
     private ContentObserver fpsObserver;
+    private BroadcastReceiver screenReceiver;
+    private DisplayManager.DisplayListener displayListener;
+
     private boolean shadeApplied = false;
     private String savedAnimScale = null;
+
+    private boolean wasScreenOff = false;
+    private boolean wakeBouncing = false;
+    private boolean wakeChangedMin = false;
+    private float wakeLowestFps = 60.0f;
+    private String savedPeakRaw = null;
+    private String savedMinRaw = null;
 
     private final Runnable restoreRunnable = new Runnable() {
         @Override
@@ -33,9 +50,18 @@ public class QSShadeHandler extends Service {
         }
     };
 
+    private final Runnable wakeRestoreRunnable = new Runnable() {
+        @Override
+        public void run() {
+            finishWakeBounce();
+        }
+    };
+
     @Override
     public void onCreate() {
         super.onCreate();
+        displayManager = getSystemService(DisplayManager.class);
+
         fpsObserver = new ContentObserver(handler) {
             @Override
             public void onChange(boolean selfChange, Uri uri) {
@@ -44,6 +70,32 @@ public class QSShadeHandler extends Service {
         };
         getContentResolver().registerContentObserver(
                 Settings.System.getUriFor(SETTING_QS_EXPANDED), false, fpsObserver);
+
+        screenReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent == null) {
+                    return;
+                }
+                String action = intent.getAction();
+                if (Intent.ACTION_SCREEN_OFF.equals(action)) {
+                    wasScreenOff = true;
+                    if (wakeBouncing) {
+                        finishWakeBounce();
+                    }
+                } else if (Intent.ACTION_SCREEN_ON.equals(action)) {
+                    if (wasScreenOff) {
+                        wasScreenOff = false;
+                        reapplyRefreshRateOnWake();
+                    }
+                }
+            }
+        };
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        registerReceiver(screenReceiver, filter);
+
         syncFpsExpanded();
     }
 
@@ -55,6 +107,11 @@ public class QSShadeHandler extends Service {
     @Override
     public void onDestroy() {
         handler.removeCallbacks(restoreRunnable);
+        finishWakeBounce();
+        if (screenReceiver != null) {
+            unregisterReceiver(screenReceiver);
+            screenReceiver = null;
+        }
         if (fpsObserver != null) {
             getContentResolver().unregisterContentObserver(fpsObserver);
             fpsObserver = null;
@@ -104,12 +161,6 @@ public class QSShadeHandler extends Service {
                     savedAnimScale = null;
                 }
             }
-
-            int blursDisabled = Settings.Global.getInt(resolver, SETTING_DISABLE_BLURS, 0);
-            int targetMode = (blursDisabled == 0)
-                    ? getProp("qs.blur.fps.limited", 1)
-                    : getProp("qs.fps.limited", 1);
-            forceFps(targetMode);
             shadeApplied = true;
         } catch (Exception e) {
             Log.e(TAG, "Failed to apply shade tuning", e);
@@ -119,7 +170,6 @@ public class QSShadeHandler extends Service {
     private void restoreAfterShade() {
         ContentResolver resolver = getContentResolver();
         try {
-            forceFps(-1);
             if (savedAnimScale != null && getProp("qs.anim.limited", 1) == 1) {
                 Settings.Global.putString(
                         resolver, Settings.Global.ANIMATOR_DURATION_SCALE, savedAnimScale);
@@ -129,6 +179,140 @@ public class QSShadeHandler extends Service {
         } finally {
             shadeApplied = false;
             savedAnimScale = null;
+        }
+    }
+
+    private void reapplyRefreshRateOnWake() {
+        if (displayManager == null) {
+            return;
+        }
+        Display display = displayManager.getDisplay(Display.DEFAULT_DISPLAY);
+        if (display == null) {
+            return;
+        }
+        Display.Mode currentMode = display.getMode();
+        Display.Mode[] modes = display.getSupportedModes();
+        if (currentMode == null || modes == null || modes.length < 2) {
+            return;
+        }
+
+        float lowestFps = Float.MAX_VALUE;
+        float highestFps = 0f;
+        for (Display.Mode m : modes) {
+            if (m.getPhysicalWidth() == currentMode.getPhysicalWidth()
+                    && m.getPhysicalHeight() == currentMode.getPhysicalHeight()) {
+                float r = m.getRefreshRate();
+                if (r < lowestFps) lowestFps = r;
+                if (r > highestFps) highestFps = r;
+            }
+        }
+        if (highestFps - lowestFps < 1.0f) {
+            return;
+        }
+
+        ContentResolver resolver = getContentResolver();
+        String peakRaw = Settings.System.getString(resolver, SETTING_PEAK_REFRESH_RATE);
+        String minRaw = Settings.System.getString(resolver, SETTING_MIN_REFRESH_RATE);
+        float defaultPeak = getDefaultPeakRefreshRate(highestFps);
+        float peakVal = parseRefreshSetting(peakRaw, defaultPeak, highestFps);
+        float minVal = parseRefreshSetting(minRaw, 0f, highestFps);
+        if (Math.max(peakVal, minVal) <= lowestFps + 1.0f) {
+            return;
+        }
+
+        finishWakeBounce();
+
+        savedPeakRaw = peakRaw;
+        savedMinRaw = minRaw;
+        wakeLowestFps = lowestFps;
+        wakeChangedMin = minVal > lowestFps + 1.0f;
+        wakeBouncing = true;
+
+        final boolean wasAboveLowest = currentMode.getRefreshRate() > lowestFps + 1.0f;
+        if (wasAboveLowest) {
+            displayListener = new DisplayManager.DisplayListener() {
+                @Override
+                public void onDisplayAdded(int displayId) {}
+
+                @Override
+                public void onDisplayRemoved(int displayId) {}
+
+                @Override
+                public void onDisplayChanged(int displayId) {
+                    if (displayId != Display.DEFAULT_DISPLAY || !wakeBouncing || displayManager == null) {
+                        return;
+                    }
+                    Display d = displayManager.getDisplay(Display.DEFAULT_DISPLAY);
+                    if (d != null && d.getMode() != null
+                            && d.getMode().getRefreshRate() <= wakeLowestFps + 1.0f) {
+                        finishWakeBounce();
+                    }
+                }
+            };
+            displayManager.registerDisplayListener(displayListener, handler);
+        }
+
+        handler.postDelayed(wakeRestoreRunnable, WAKE_BOUNCE_TIMEOUT_MS);
+        try {
+            if (wakeChangedMin) {
+                Settings.System.putFloat(resolver, SETTING_MIN_REFRESH_RATE, lowestFps);
+            }
+            Settings.System.putFloat(resolver, SETTING_PEAK_REFRESH_RATE, lowestFps);
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to bounce refresh rate on wake", e);
+            finishWakeBounce();
+        }
+    }
+
+    private void finishWakeBounce() {
+        handler.removeCallbacks(wakeRestoreRunnable);
+        if (displayListener != null && displayManager != null) {
+            displayManager.unregisterDisplayListener(displayListener);
+            displayListener = null;
+        }
+        if (!wakeBouncing) {
+            return;
+        }
+        wakeBouncing = false;
+        ContentResolver resolver = getContentResolver();
+        try {
+            if (wakeChangedMin) {
+                Settings.System.putString(resolver, SETTING_MIN_REFRESH_RATE, savedMinRaw);
+            }
+            Settings.System.putString(resolver, SETTING_PEAK_REFRESH_RATE, savedPeakRaw);
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to restore refresh rate after wake", e);
+        } finally {
+            wakeChangedMin = false;
+            savedPeakRaw = null;
+            savedMinRaw = null;
+        }
+    }
+
+    private static float getDefaultPeakRefreshRate(float fallback) {
+        try {
+            Resources res = Resources.getSystem();
+            int id = res.getIdentifier("config_defaultPeakRefreshRate", "integer", "android");
+            if (id != 0) {
+                int val = res.getInteger(id);
+                if (val > 0) {
+                    return (float) val;
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return fallback;
+    }
+
+    private static float parseRefreshSetting(String raw, float defaultVal, float highestFps) {
+        if (raw == null) {
+            return defaultVal;
+        }
+        try {
+            float val = Float.parseFloat(raw);
+            return Float.isInfinite(val) ? highestFps : val;
+        } catch (NumberFormatException e) {
+            return defaultVal;
         }
     }
 
@@ -155,26 +339,5 @@ public class QSShadeHandler extends Service {
             Log.w(TAG, "getProp failed for " + key, e);
         }
         return fallback;
-    }
-
-    private static void forceFps(int mode) {
-        try {
-            Class<?> sm = Class.forName("android.os.ServiceManager");
-            Method getService = sm.getMethod("getService", String.class);
-            IBinder sf = (IBinder) getService.invoke(null, "SurfaceFlinger");
-            if (sf == null) {
-                return;
-            }
-            Parcel data = Parcel.obtain();
-            try {
-                data.writeInterfaceToken("android.ui.ISurfaceComposer");
-                data.writeInt(mode);
-                sf.transact(SF_TX_SET_DEBUG_MODE, data, null, 0);
-            } finally {
-                data.recycle();
-            }
-        } catch (Exception e) {
-            Log.w(TAG, "Failed to set SurfaceFlinger mode " + mode, e);
-        }
     }
 }
