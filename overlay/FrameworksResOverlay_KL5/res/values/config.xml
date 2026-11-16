@@ -327,6 +327,18 @@
     <!-- Is the device capable of hot swapping an UICC Card -->
     <bool name="config_hotswapCapable">true</bool>
 
+    <!-- Config determines whether to update phone object when voice registration
+         state changes. Voice radio tech change will always trigger an update of
+         phone object irrespective of this config -->
+    <bool name="config_switch_phone_on_voice_reg_state_change">false</bool>
+
+    <!-- Whether to select voice/data/sms preference without user confirmation -->
+    <bool name="config_voice_data_sms_auto_fallback">true</bool>
+
+    <!-- Boolean indicating if restoring network selection should be skipped -->
+    <!-- The restoring is handled by modem if it is true -->
+    <bool name="skip_restoring_network_selection">true</bool>
+
     <!-- Whether WiFi display is supported by this device.
          There are many prerequisites for this feature to work correctly.
          Here are a few of them:

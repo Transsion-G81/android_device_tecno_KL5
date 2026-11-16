@@ -23,6 +23,15 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/vabc_features.m
 # Inherit common MediaTek IMS
 $(call inherit-product, vendor/mediatek/ims/ims.mk)
 
+PRODUCT_PRODUCT_PROPERTIES += \
+    persist.dbg.volte_avail_ovr=1 \
+    persist.dbg.vt_avail_ovr=1 \
+    persist.dbg.wfc_avail_ovr=1
+
+PRODUCT_PACKAGES += \
+    libaudioclient_shim \
+    libui_shim
+
 # A/B
 PRODUCT_PACKAGES += \
     android.hardware.boot-service.mediatek \
@@ -186,6 +195,7 @@ PRODUCT_PACKAGES += \
     NfcResOverlay_KL5 \
     SystemUIOverlay_KL5 \
     SettingsResOverlay_KL5 \
+    TelephonyOverlay_KL5 \
     TetheringResOverlay_KL5 \
     WifiResOverlay_KL5
 
