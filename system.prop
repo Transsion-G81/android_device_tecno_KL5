@@ -6,15 +6,6 @@ ro.charger.enable_suspend=true
 
 # Dalvik
 dalvik.vm.dex2oat64.enabled=true
-dalvik.vm.heapstartsize=8m
-dalvik.vm.heapmaxfree=8m
-dalvik.vm.heapminfree=512k
-dalvik.vm.heaptargetutilization=0.6
-ro.limit_cache.support=1
-ro.cur_max_process.val=72
-
-# Kernel
-ro.kernel.zio=38,108,105,16
 
 # Identity
 Build.BRAND=MTK
@@ -24,8 +15,6 @@ sys.ipo.disable=1
 sys.ipo.pwrdncap=2
 
 # Memory Optimization
-ro.config.dha_cached_max=32
-ro.config.dha_cached_min=16
 ro.config.per_app_memcg=false
 
 # MTK vendor
@@ -92,10 +81,6 @@ mediatek.wlan.ctia=0
 wifi.tethering.interface=ap0
 wifi.direct.interface=p2p0
 
-# ZRAM
-ro.zram.first_wb_delay_mins=1440
-ro.zram.mark_idle_delay_mins=60
-ro.zram.periodic_wb_delay_hours=24
 
 # Zygote
 zygote.critical_window.minute=10

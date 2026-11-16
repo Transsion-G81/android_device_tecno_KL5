@@ -65,9 +65,6 @@ on property:sys.boot_completed=1
     write /sys/block/sdb/queue/nr_requests 64
     write /sys/block/sdc/queue/nr_requests 64
 
-    # Enable ZRAM on boot_complete
-    swapon_all /vendor/etc/fstab.mt6789
-    write /proc/sys/vm/swappiness 60
 
     write /sys/devices/platform/soc/11270000.ufshci/clkgate_enable 1
     write /proc/sys/kernel/sched_migration_cost_ns 200000

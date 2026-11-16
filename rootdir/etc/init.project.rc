@@ -2,8 +2,6 @@ import /vendor/etc/init/hw/init.mtkgki.rc
 
 # MTK project .rc configure
 
-on early-init
-    exec_background u:r:vendor_modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules trace_mmstat.ko
 
 on init
     mkdir /mnt/media_rw/usbotg 0700 media_rw media_rw
@@ -56,16 +54,10 @@ service fuse_usbotg /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/
     class late_start
     disabled
 
-# start mmstat
 on property:sys.boot_completed=1
-    mkdir /sys/kernel/tracing/instances/mmstat 711
-    write /sys/kernel/tracing/instances/mmstat/tracing_on 0
-    write /sys/kernel/tracing/instances/mmstat/buffer_size_kb 16
-    write /sys/kernel/tracing/instances/mmstat/events/mmstat/enable 1
-    write /sys/kernel/tracing/instances/mmstat/tracing_on 1
     write /proc/sys/vm/watermark_scale_factor 20
     write /proc/sys/vm/extra_free_kbytes 13500
     write /proc/sys/vm/min_free_kbytes 7555
 
 
-    write /proc/sys/vm/swappiness 180
+    write /proc/sys/vm/swappiness 100
