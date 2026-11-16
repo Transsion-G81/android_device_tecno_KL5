@@ -20,9 +20,31 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/generic_ramdisk.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/launch_with_vendor_ramdisk.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/vabc_features.mk)
 
-# Inherit common MediaTek IMS
-$(call inherit-product, vendor/mediatek/ims/ims.mk)
+# Inherit common MediaTek IMS (bypass ims.mk's mediatek-frameworks.mk so
+# hardware/mediatek's telecom/telephony stubs are not added to PRODUCT_BOOT_JARS)
+$(call inherit-product, vendor/mediatek/ims/ims-vendor.mk)
 
+PRODUCT_SOURCE_ROOT_DIRS += \
+    -hardware/mediatek/frameworks/telecom-common \
+    -hardware/mediatek/frameworks/telephony-common
+
+PRODUCT_PACKAGES += \
+    mediatek-common \
+    mtk-ims \
+    mtk-ims-telephony
+
+PRODUCT_BOOT_JARS += \
+    system_ext:mediatek-common
+
+PRODUCT_COPY_FILES += \
+    vendor/mediatek/ims/configs/permissions/privapp-permissions-com.mediatek.ims.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/privapp-permissions-com.mediatek.ims.xml \
+    vendor/mediatek/ims/configs/permissions/privapp-permissions-com.mediatek.telephony.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/privapp-permissions-com.mediatek.telephony.xml \
+    vendor/mediatek/ims/configs/sysconfig/com.mediatek.ims.config.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/sysconfig/com.mediatek.ims.config.xml \
+    vendor/mediatek/ims/configs/permissions/mediatek-ims-base.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/mediatek-ims-base.xml \
+    vendor/mediatek/ims/configs/permissions/mediatek-ims-common.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/mediatek-ims-common.xml \
+    vendor/mediatek/ims/configs/permissions/mediatek-telecom-common.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/mediatek-telecom-common.xml \
+    vendor/mediatek/ims/configs/permissions/mediatek-telephony-base.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/mediatek-telephony-base.xml \
+    vendor/mediatek/ims/configs/permissions/mediatek-telephony-common.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/mediatek-telephony-common.xml
 PRODUCT_PRODUCT_PROPERTIES += \
     persist.dbg.volte_avail_ovr=1 \
     persist.dbg.vt_avail_ovr=1 \
