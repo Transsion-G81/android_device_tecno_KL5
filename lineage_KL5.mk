@@ -38,3 +38,5 @@ BuildFingerprint=TECNO/KL5-OP/TECNO-KL5:14/UP1A.231005.007/240811V1304:user/rele
     SystemName=$(PRODUCT_SYSTEM_NAME) \
     ProductModel=$(PRODUCT_SYSTEM_DEVICE) \
     DeviceProduct=$(PRODUCT_SYSTEM_NAME)
+
+PRODUCT_PACKAGES += apns-conf.KL5

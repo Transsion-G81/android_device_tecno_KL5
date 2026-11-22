@@ -1,0 +1,592 @@
+[
+  {
+    "match": {
+      "mcc": "204",
+      "mnc": "08",
+      "carrier": "IMS",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "1644",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "204",
+      "mnc": "69",
+      "carrier": "IMS",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "2651",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "208",
+      "mnc": "01",
+      "carrier": "1&1 DE IMS",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "208",
+      "mnc": "15",
+      "carrier": "IMS",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "2124",
+      "mvno_match_data": "F003",
+      "mvno_type": "gid",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "208",
+      "mnc": "15",
+      "carrier": "IMS",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "1958",
+      "mtu": "1280",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "230",
+      "mnc": "02",
+      "carrier": "IMS",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "1449",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "231",
+      "mnc": "06",
+      "carrier": "IMS",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "1988",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "234",
+      "mnc": "20",
+      "carrier": "ims",
+      "apn": "IMS",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "2140",
+      "mtu": "1500",
+      "mvno_match_data": "0309",
+      "mvno_type": "gid",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "234",
+      "mnc": "20",
+      "carrier": "ims",
+      "apn": "IMS",
+      "bearer_bitmask": "14|18|20",
+      "mtu": "1500",
+      "mvno_match_data": "030B",
+      "mvno_type": "gid",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "234",
+      "mnc": "20",
+      "carrier": "ims",
+      "apn": "IMS",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "2141",
+      "mtu": "1500",
+      "mvno_match_data": "0310",
+      "mvno_type": "gid",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "234",
+      "mnc": "20",
+      "carrier": "ims",
+      "apn": "IMS",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "1505",
+      "mtu": "1500",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "234",
+      "mnc": "30",
+      "carrier": "IMS",
+      "apn": "ims",
+      "authtype": "1",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "2102",
+      "mvno_match_data": "B3",
+      "mvno_type": "gid",
+      "password": "secure",
+      "type": "ims",
+      "user": "eesecure"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "234",
+      "mnc": "30",
+      "carrier": "IMS",
+      "apn": "ims",
+      "authtype": "1",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "2101",
+      "mvno_match_data": "C3",
+      "mvno_type": "gid",
+      "password": "secure",
+      "type": "ims",
+      "user": "eesecure"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "234",
+      "mnc": "30",
+      "carrier": "IMS",
+      "apn": "ims",
+      "bearer_bitmask": "14|20",
+      "carrier_id": "2152",
+      "mvno_match_data": "LycaMobile",
+      "mvno_type": "spn",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "235",
+      "mnc": "94",
+      "carrier": "ims",
+      "apn": "IMS",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "1505",
+      "mtu": "1500",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "238",
+      "mnc": "01",
+      "carrier": "ims",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "1463",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "238",
+      "mnc": "10",
+      "carrier": "ims",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "1463",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "255",
+      "mnc": "06",
+      "carrier": "IMS",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "1750",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "260",
+      "mnc": "03",
+      "carrier": "IMS",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "1659",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "302",
+      "mnc": "220",
+      "carrier": "IMS",
+      "apn": "ims",
+      "bearer_bitmask": "3|9|10|11|14|15|18|20",
+      "carrier_id": "2089",
+      "mvno_match_data": "4D4F",
+      "mvno_type": "gid",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "302",
+      "mnc": "220",
+      "carrier": "Koodo IMS",
+      "apn": "ims",
+      "bearer_bitmask": "3|9|10|11|14|15|18|20",
+      "carrier_id": "2020",
+      "mvno_match_data": "4B4F",
+      "mvno_type": "gid",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "302",
+      "mnc": "220",
+      "carrier": "TELUS IMS",
+      "apn": "ims",
+      "bearer_bitmask": "3|9|10|11|14|15|18|20",
+      "carrier_id": "1404",
+      "mvno_match_data": "5455",
+      "mvno_type": "gid",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "302",
+      "mnc": "220",
+      "carrier": "Telus IMS",
+      "apn": "ims",
+      "bearer_bitmask": "3|9|10|11|14|15|18|20",
+      "mvno_match_data": "4C4F",
+      "mvno_type": "gid",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "311",
+      "mnc": "490",
+      "carrier": "MetroPCS IMS",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "1949",
+      "mtu": "1440",
+      "mvno_match_data": "6D38",
+      "mvno_type": "gid",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "311",
+      "mnc": "490",
+      "carrier": "T-Mobile US IMS",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "1",
+      "mtu": "1440",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "425",
+      "mnc": "019",
+      "carrier": "019IMS",
+      "apn": "IMS",
+      "bearer_bitmask": "14|20",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "425",
+      "mnc": "02",
+      "carrier": "IMS",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "797",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "425",
+      "mnc": "19",
+      "carrier": "019IMS",
+      "apn": "IMS",
+      "bearer_bitmask": "14|20",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "502",
+      "mnc": "16",
+      "carrier": "IMS",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "1630",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "502",
+      "mnc": "18",
+      "carrier": "IMS",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "1632",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "505",
+      "mnc": "02",
+      "carrier": "Optus IMS",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "30",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "515",
+      "mnc": "03",
+      "carrier": "IMS",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "1654",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "520",
+      "mnc": "00",
+      "carrier": "IMS",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "1997",
+      "mvno_match_data": "01",
+      "mvno_type": "gid",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "520",
+      "mnc": "01",
+      "carrier": "IMS",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "1097",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "520",
+      "mnc": "04",
+      "carrier": "IMS",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "1997",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "520",
+      "mnc": "05",
+      "carrier": "IMS",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "1897",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  },
+  {
+    "match": {
+      "mcc": "525",
+      "mnc": "01",
+      "carrier": "Singtel ims",
+      "apn": "ims",
+      "bearer_bitmask": "14|18|20",
+      "carrier_id": "31",
+      "type": "ims"
+    },
+    "set": {
+      "protocol": "IPV4V6",
+      "roaming_protocol": "IPV4V6"
+    }
+  }
+]

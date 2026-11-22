@@ -1,0 +1,37 @@
+//
+// SPDX-License-Identifier: Apache-2.0
+//
+
+package {
+    default_applicable_licenses: ["Android-Apache-2.0"],
+}
+
+python_binary_host {
+    name: "merge_apns_KL5",
+    main: "merge_apns.py",
+    srcs: ["merge_apns.py"],
+}
+
+genrule {
+    name: "apns_conf_KL5_gen",
+    out: ["apns-conf.xml"],
+    srcs: [
+        "//vendor/apn/upstream:upstream_apns_conf",
+        "ims-overlay.xml",
+        "ims-overrides.json",
+    ],
+    tools: ["merge_apns_KL5"],
+    cmd: "$(location merge_apns_KL5) " +
+        "--upstream $(location //vendor/apn/upstream:upstream_apns_conf) " +
+        "--overlay $(location ims-overlay.xml) " +
+        "--overrides $(location ims-overrides.json) > $(out)",
+}
+
+prebuilt_etc_xml {
+    name: "apns-conf.KL5",
+    overrides: ["apns-conf.xml"],
+    src: ":apns_conf_KL5_gen",
+    filename: "apns-conf.xml",
+    schema: "//vendor/apn:apns-conf-schema",
+    product_specific: true,
+}
