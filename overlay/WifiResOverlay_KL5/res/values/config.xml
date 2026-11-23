@@ -49,8 +49,9 @@
     <!-- Wifi driver supports Automatic channel selection (ACS) for softap -->
     <bool translatable="false" name="config_wifi_softap_acs_supported">true</bool>
 
-    <!-- Wifi driver supports WPA3 Simultaneous Authentication of Equals (WPA3-SAE) for softap -->
-    <bool translatable="false" name="config_wifi_softap_sae_supported">true</bool>
+    <!-- Disable WPA3-SAE for softap: the MTK driver rejects WPA2/WPA3 transition-mode
+         associations with status 53 (INVALID_PMKID) for some clients (e.g. iPhone). -->
+    <bool translatable="false" name="config_wifi_softap_sae_supported">false</bool>
 
     <!-- Wifi driver supports IEEE80211AC for softap -->
     <bool translatable="false" name="config_wifi_softap_ieee80211ac_supported">true</bool>
